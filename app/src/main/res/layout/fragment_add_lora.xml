@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/frameLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    android:orientation="vertical"
+    tools:context=".LoraParametersFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <ProgressBar
+        android:id="@+id/lora_progress"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|center" />
+
+    <LinearLayout
+        android:id="@+id/lora_parameters"
+        android:layout_width="500dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/lora_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Address" />
+
+
+        <TextView
+            android:id="@+id/lora_index"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Index:" />
+
+        <TextView
+            android:id="@+id/lora_battery"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Battery" />
+
+        <TextView
+            android:id="@+id/lora_temp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Temperature" />
+
+        <TextView
+            android:id="@+id/lora_rssi"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="RSSI" />
+
+        <TextView
+            android:id="@+id/lora_tamper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Tamper" />
+
+        <TextView
+            android:id="@+id/lora_jumper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Jumper" />
+
+
+
+        <TextView
+            android:id="@+id/lora_hall1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Hall sensor 1" />
+
+        <TextView
+            android:id="@+id/lora_hall2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Hall sensor 2" />
+
+
+        <TextView
+            android:id="@+id/hall_moving"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Moving" />
+
+
+        <TextView
+            android:id="@+id/hall_position"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Position" />
+
+        <Button
+            android:id="@+id/lora_del_but"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Delete" />
+
+
+    </LinearLayout>
+
+</LinearLayout>
