@@ -163,15 +163,16 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 
 		Log.e("onDataReceived", "cmd = "+data[0]);
 		// CHAR_CMD_ARM
-		if(data[0]==0) {
-			mArmState.postValue((int) data[1]);
-		}
-		// CHAR_CMD_LORA
-		else if(data[0]==1) {
-			mLoraState.postValue(data);
-		}
-		else if(data[0]==4) {
-			mStatusState.postValue((int) data[1]);
+		if ( data.length > 0) {
+			if (data[0] == 0) {
+				mArmState.setValue((int) data[1]);
+			}
+			// CHAR_CMD_LORA
+			else if (data[0] == 1) {
+				mLoraState.setValue(data);
+			} else if (data[0] == 4) {
+				mStatusState.setValue((int) data[1]);
+			}
 		}
 		//mButtonState.postValue(state);
 
