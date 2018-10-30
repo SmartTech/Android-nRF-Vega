@@ -38,6 +38,7 @@ import android.bluetooth.BluetoothDevice;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import butterknife.internal.Utils;
 import no.nordicsemi.android.vega.R;
 import no.nordicsemi.android.vega.adapter.ExtendedBluetoothDevice;
 import no.nordicsemi.android.vega.profile.BlinkyManager;
@@ -60,8 +61,10 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 	// Flag that holds the on off state of the LED. On is true, Off is False
 	private final MutableLiveData<Boolean> mLEDState = new MutableLiveData<>();
 	private final MutableLiveData<Integer> mArmState = new MutableLiveData<>();
-	private final MutableLiveData<byte[]> mLoraState = new MutableLiveData<byte[]>();
-	private final MutableLiveData<Integer> mStatusState = new MutableLiveData<>();
+    private final MutableLiveData<byte[]> mSerialNumber = new MutableLiveData<>();
+    private final MutableLiveData<Integer> mTemperature = new MutableLiveData<>();
+	private final MutableLiveData<byte[]> mLoraState = new MutableLiveData<>();
+	private final MutableLiveData<byte[]> mStatusState = new MutableLiveData<>();
 
 	// Flag that holds the pressed released state of the button on the devkit. Pressed is true, Released is False
 	private final MutableLiveData<Boolean> mButtonState = new MutableLiveData<>();
@@ -92,11 +95,19 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 	public MutableLiveData<byte[]> getLoraState() {
 		return mLoraState;
 	}
-	public LiveData<Integer> getStatusState() {
+	public LiveData<byte[]> getStatusState() {
 		return mStatusState;
 	}
 
-	public BlinkyViewModel(@NonNull final Application application) {
+    public LiveData<byte[]> getSerialNumber() {
+        return mSerialNumber;
+    }
+
+    public LiveData<Integer> getTemperature() {
+        return mTemperature;
+    }
+
+    public BlinkyViewModel(@NonNull final Application application) {
 		super(application);
 
 		// Initialize the manager
@@ -126,26 +137,26 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 	}
 
 	public void requestInfo() {
-		final byte[] command = {2, 1, 0, 0};
+        final byte[] command = {2};
 		mBlinkyManager.write(command);
-		Log.e("ble", "requestInfo");
+		Log.e("ble", "requestInfo " );
 	}
 
 	public void prearm() {
-		final byte[] command = {0, 0, 0, 0};
+        final byte[] command = {0, 0};
 		mBlinkyManager.write(command);
 	}
 
 	public void armConfirm() {
-		final byte[] command = {0, 1, 0, 0};
+        final byte[] command = {0, 1};
 		mBlinkyManager.write(command);
 	}
 	public void armDiscard() {
-		final byte[] command = {0, 2, 0, 0};
+        final byte[] command = {0, 2};
 		mBlinkyManager.write(command);
 	}
 	public void disarm() {
-		final byte[] command = {0, 3, 0, 0};
+        final byte[] command = {0, 3};
 		mBlinkyManager.write(command);
 	}
 
@@ -170,8 +181,8 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 			// CHAR_CMD_LORA
 			else if (data[0] == 1) {
 				mLoraState.setValue(data);
-			} else if (data[0] == 4) {
-				mStatusState.setValue((int) data[1]);
+			} else if (data[0] == 3) {
+				mStatusState.setValue( data);
 			}
 		}
 		//mButtonState.postValue(state);
@@ -183,7 +194,22 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 		mLEDState.postValue(state);
 	}
 
-	@Override
+    @Override
+    public void onRevisionReceived(String revision) {
+
+    }
+
+    @Override
+    public void onSerialReceived(byte[] serial) {
+        mSerialNumber.setValue(serial);
+    }
+
+    @Override
+    public void onTemperatureReceived(Integer temp) {
+        mTemperature.setValue(temp);
+    }
+
+    @Override
 	public void onDeviceConnecting(final BluetoothDevice device) {
 		mConnectionState.postValue(getApplication().getString(R.string.state_connecting));
 	}
@@ -217,6 +243,7 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 	@Override
 	public void onServicesDiscovered(final BluetoothDevice device, final boolean optionalServicesFound) {
 		mConnectionState.postValue(getApplication().getString(R.string.state_initializing));
+
 	}
 
 	@Override
@@ -261,9 +288,9 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 		// TODO implement
 	}
 
-    public void addLora(byte[] addr) {
-		final byte[] command = {1, 4, addr[0], addr[1], addr[2], addr[3], addr[4]};
-		mBlinkyManager.write(command);
-
-	}
+//    public void addLora(byte[] addr) {
+//		final byte[] command = {1, 4, addr[0], addr[1], addr[2], addr[3], addr[4]};
+//		mBlinkyManager.write(command);
+//
+	//}
 }

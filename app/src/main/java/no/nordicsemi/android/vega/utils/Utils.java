@@ -152,4 +152,19 @@ public class Utils {
 		}
 		return b;
 	}
+
+	public static String byteArrayToHexString(byte[] array) {
+		StringBuffer hexString = new StringBuffer();
+		for (byte b : array) {
+			int intVal = b & 0xff;
+			if (intVal < 0x10)
+				hexString.append("0");
+			hexString.append(Integer.toHexString(intVal));
+		}
+		return hexString.toString();
+	}
+
+	public static Integer TemperatureFromCharacteristicValue(byte[] data) {
+		return new Integer(25);
+	}
 }

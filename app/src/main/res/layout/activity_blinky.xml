@@ -110,13 +110,11 @@
 						android:id="@+id/info_device_serial_value"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
-						android:layout_marginEnd="8dp"
-						android:layout_marginStart="8dp"
 						android:padding="5dp"
 						android:text="value"
 						app:layout_constraintEnd_toEndOf="parent"
-						app:layout_constraintStart_toEndOf="@+id/info_device_serial"
-						app:layout_constraintTop_toBottomOf="@+id/info_tool_bar" />
+						app:layout_constraintLeft_toRightOf="@+id/info_device_serial"
+						app:layout_constraintTop_toTopOf="@+id/info_device_serial" />
 
 					<TextView
 						android:id="@+id/info_device_temp"

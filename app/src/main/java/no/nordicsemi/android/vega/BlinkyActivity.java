@@ -63,6 +63,7 @@ import java.util.ArrayList;
 
 import no.nordicsemi.android.vega.adapter.ExtendedBluetoothDevice;
 import no.nordicsemi.android.vega.adapter.LoraAdapter;
+import no.nordicsemi.android.vega.utils.Utils;
 import no.nordicsemi.android.vega.viewmodels.BlinkyViewModel;
 
 public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.ClickLoraDialogListener, LoraParametersFragment.LoraDataListener {
@@ -87,6 +88,8 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 
 	ProgressBar armProgressBar;
 	TextView armState;
+	TextView mSerial;
+	TextView mTempValue;
 
 	ConstraintLayout armContainer;
 	Handler mTimeoutHandler;
@@ -172,8 +175,17 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 		final TextView connectionState = findViewById(R.id.connection_state);
 		final View content = findViewById(R.id.device_container);
 
+		mSerial = findViewById(R.id.info_device_serial_value);
 
-		//led.setOnClickListener(view -> viewModel.toggleLED(led.isChecked()));
+		viewModel.getSerialNumber().observe(this, serial -> {
+			mSerial.setText(Utils.byteArrayToHexString(serial));
+		});
+
+		mTempValue = findViewById(R.id.info_device_temp_value);
+
+		viewModel.getTemperature().observe(this, temp -> {
+			mTempValue.setText(temp.toString());
+		});
 
 		viewModel.isDeviceReady().observe(this, deviceReady -> {
 			progressContainer.setVisibility(View.GONE);
@@ -183,7 +195,7 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 		viewModel.getConnectionState().observe(this, connectionState::setText);
 		viewModel.isConnected().observe(this, connected -> {
 			if (connected) {
-				viewModel.requestInfo();
+		//		viewModel.requestInfo();
 			} else {
 				finish();
 			}

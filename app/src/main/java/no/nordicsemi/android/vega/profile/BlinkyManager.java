@@ -28,6 +28,7 @@ import android.bluetooth.BluetoothGattService;
 import android.content.Context;
 import android.util.Log;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.UUID;
@@ -35,12 +36,15 @@ import java.util.UUID;
 import no.nordicsemi.android.ble.BleManager;
 import no.nordicsemi.android.ble.Request;
 import no.nordicsemi.android.log.LogContract;
+import no.nordicsemi.android.vega.utils.Utils;
 
 public class BlinkyManager extends BleManager<BlinkyManagerCallbacks> {
 	/**
 	 * Nordic Blinky Service UUID
 	 */
 	public final static UUID LBS_UUID_SERVICE = UUID.fromString("9c201400-1c13-8b49-9236-040a580c61b8");
+	public final static UUID DIS_UUID_SERVICE = UUID.fromString("0000180A-0000-1000-8000-00805F9B34FB");
+	public final static UUID HTS_UUID_SERVICE = UUID.fromString("00001809-0000-1000-8000-00805F9B34FB");
 	/**
 	 * BUTTON characteristic UUID
 	 */
@@ -52,8 +56,14 @@ public class BlinkyManager extends BleManager<BlinkyManagerCallbacks> {
 	private final static UUID LBS_UUID_EVENT
 			= UUID.fromString("9c201401-1c13-8b49-9236-040a580c61b8");
 	//private final static UUID LBS_UUID_LED_CHAR = UUID.fromString("00001525-1212-efde-1523-785feabcd123");
+	private final static UUID DIS_UUID_MODEL_NUMBER = UUID.fromString("00002A24-0000-1000-8000-00805F9B34FB");
+	private final static UUID DIS_UUID_SERIAL = UUID.fromString("00002A23-0000-1000-8000-00805F9B34FB");
+
+	private final static UUID HTS_UUID_TEMPERATURE = UUID.fromString("00002A1C-0000-1000-8000-00805F9B34FB");
 
 	private BluetoothGattCharacteristic mStatusCharacteristic, mEventCharacteristic;
+	private BluetoothGattCharacteristic mRevisionCharacteristic, mSerialCharacteristic;
+	private BluetoothGattCharacteristic mTemperatureCharacteristic;
 
 	public BlinkyManager(final Context context) {
 		super(context);
@@ -82,6 +92,8 @@ public class BlinkyManager extends BleManager<BlinkyManagerCallbacks> {
 			final LinkedList<Request> requests = new LinkedList<>();
 			requests.push(Request.newReadRequest(mEventCharacteristic));
 			requests.push(Request.newReadRequest(mStatusCharacteristic));
+			requests.push(Request.newReadRequest(mRevisionCharacteristic));
+			requests.push(Request.newReadRequest(mSerialCharacteristic));
 			requests.push(Request.newEnableNotificationsRequest(mEventCharacteristic));
 			requests.push(Request.newEnableNotificationsRequest(mStatusCharacteristic));
 			return requests;
@@ -90,13 +102,30 @@ public class BlinkyManager extends BleManager<BlinkyManagerCallbacks> {
 		@Override
 		public boolean isRequiredServiceSupported(final BluetoothGatt gatt) {
 			final BluetoothGattService service = gatt.getService(LBS_UUID_SERVICE);
+			final BluetoothGattService di_service =  gatt.getService(DIS_UUID_SERVICE);
+			final BluetoothGattService ht_service =  gatt.getService(HTS_UUID_SERVICE);
 			Log.e("TEST", "isRequiredServiceSupported");
 			if (service != null) {
-				Log.e("TEST", "service != NULL");
+				Log.e("TEST", "LBS service  found");
 				mStatusCharacteristic = service.getCharacteristic(LBS_UUID_STATUS);
 				mEventCharacteristic = service.getCharacteristic(LBS_UUID_EVENT);
 			} else {
 				Log.e("TEST", "service == NULL");
+			}
+
+			if (di_service != null) {
+				Log.e("TEST", "DIS service found ");
+				mRevisionCharacteristic = di_service.getCharacteristic(DIS_UUID_MODEL_NUMBER);
+				mSerialCharacteristic = di_service.getCharacteristic(DIS_UUID_SERIAL);
+			} else {
+				Log.e("TEST", "di_service == NULL");
+			}
+
+			if (ht_service != null) {
+				Log.e("TEST", "HTS service found ");
+				mTemperatureCharacteristic = ht_service.getCharacteristic(HTS_UUID_TEMPERATURE);
+			} else {
+				Log.e("TEST", "di_service == NULL");
 			}
 
 			boolean writeRequest = false;
@@ -108,13 +137,15 @@ public class BlinkyManager extends BleManager<BlinkyManagerCallbacks> {
 				Log.e("TEST", "mEventCharacteristic == NULL");
 			}
 
-			return mStatusCharacteristic != null && mEventCharacteristic != null && writeRequest;
+			return  mStatusCharacteristic != null && mEventCharacteristic != null && writeRequest;
 		}
 
 		@Override
 		protected void onDeviceDisconnected() {
 			mStatusCharacteristic = null;
 			mEventCharacteristic = null;
+			mRevisionCharacteristic = null;
+			mSerialCharacteristic = null;
 		}
 
 		@Override
@@ -132,10 +163,22 @@ public class BlinkyManager extends BleManager<BlinkyManagerCallbacks> {
 				Log.e("TEST", "characteristic == mEventCharacteristic = " + str);
 				final boolean ledOn = (data[0]==1);
 				//mCallbacks.onDataSent(ledOn);
-			} else {
+			} else if (characteristic == mStatusCharacteristic) {
 				Log.e("TEST", "characteristic == mStatusCharacteristic");
 				final boolean buttonPressed = (data[0]==1);
 				mCallbacks.onDataReceived(data);
+			} else if (characteristic == mRevisionCharacteristic) {
+				Log.e("TEST", "characteristic == mRevisionCharacteristic");
+				try {
+					mCallbacks.onRevisionReceived(new String(data, "UTF-8"));
+				} catch (UnsupportedEncodingException e) {
+					e.printStackTrace();
+				}
+
+			}  else if (characteristic == mSerialCharacteristic) {
+				Log.e("TEST", "characteristic == mSerialCharacteristic");
+				mCallbacks.onSerialReceived(data);
+
 			}
 		}
 
@@ -158,11 +201,15 @@ public class BlinkyManager extends BleManager<BlinkyManagerCallbacks> {
 				if (intVal < 0x10) str.append("0");
 				str.append(Integer.toHexString(intVal));
 			}
-			Log.e("TEST", "characteristic == mEventCharacteristic = " + str);
-			final int data = characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT32, 0);
-			final boolean buttonPressed = data == 0x01;
-			log(LogContract.Log.Level.APPLICATION, "Button " + (buttonPressed ? "pressed" : "released"));
-			mCallbacks.onDataReceived(data2);
+			if (characteristic == mEventCharacteristic) {
+				Log.e("TEST", "characteristic == mEventCharacteristic = " + str);
+				final int data = characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT32, 0);
+				final boolean buttonPressed = data == 0x01;
+				log(LogContract.Log.Level.APPLICATION, "Button " + (buttonPressed ? "pressed" : "released"));
+				mCallbacks.onDataReceived(data2);
+			} else if (characteristic == mTemperatureCharacteristic) {
+				mCallbacks.onTemperatureReceived(Utils.TemperatureFromCharacteristicValue(data2));
+			}
 		}
 	};
 
