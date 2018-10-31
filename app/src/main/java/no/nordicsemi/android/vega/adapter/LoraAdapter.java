@@ -19,7 +19,7 @@ public class LoraAdapter extends ArrayAdapter<LoraItem> implements View.OnClickL
 
     Context ctx;
     LayoutInflater lInflater;
-    ArrayList<LoraItem> loraObjects;
+    final ArrayList<LoraItem> loraObjects;
     ClickLoraDialogListener mListener;
 
     public interface ClickLoraDialogListener {

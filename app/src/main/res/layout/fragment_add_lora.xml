@@ -84,14 +84,14 @@
 
 
         <TextView
-            android:id="@+id/hall_moving"
+            android:id="@+id/lora_accel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Moving" />
 
 
         <TextView
-            android:id="@+id/hall_position"
+            android:id="@+id/lora_axis"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Position" />

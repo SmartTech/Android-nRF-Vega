@@ -58,6 +58,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -74,7 +75,7 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
     LoraParametersFragment loraParametersDialog = null;
     BlinkyViewModel viewModel;
 
-	ArrayList<LoraItem> loraItems = new ArrayList<LoraItem>();
+	//ArrayList<LoraItem> loraItems = new ArrayList<LoraItem>();
 
 	LoraAdapter loraAdapter;
 
@@ -100,7 +101,7 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 
 	int armStateFlag = 0;
 
-	int loraCount = 0;
+//	int loraCount = 0;
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
@@ -123,7 +124,7 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 		viewModel = ViewModelProviders.of(this).get(BlinkyViewModel.class);
 		viewModel.connect(device);
 
-		loraAdapter = new LoraAdapter(this, loraItems);
+		loraAdapter = new LoraAdapter(this, /*loraItems*/ viewModel.getLoraItems().getValue());
 
 		// настраиваем список
 		ListView loraList = (ListView) findViewById(R.id.LoraListView);
@@ -193,6 +194,7 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 			viewModel.requestInfo();
 		});
 		viewModel.getConnectionState().observe(this, connectionState::setText);
+
 		viewModel.isConnected().observe(this, connected -> {
 			if (connected) {
 		//		viewModel.requestInfo();
@@ -258,18 +260,21 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 
 		viewModel.getLoraState().observe(this, value -> {
 			// CHAR_CMD_LORA events
+            Log.e("Observed lora state", String.valueOf(value[1]) );
 			switch(value[1]) {
 				// CHAR_LORA_COUNT
-				case 0 : {
-					if(loraCount>0) {
-						loraItems.clear();
-						loraAdapter.notifyDataSetChanged();
-					}
-					loraCount = value[2];
-					Log.e("LORA_count", String.valueOf(loraCount));
-				} break;
+
+//				case 0 : {
+//					if(loraCount>0) {
+//						loraItems.clear();
+//						loraAdapter.notifyDataSetChanged();
+//					}
+//					loraCount = value[2];
+//					Log.e("LORA_count", "Unknown");
+//				} break;
+
 				// CHAR_LORA_ADDR
-				case 1 : {
+				case 2 : {
 					Log.e("LORA_addr", String.valueOf(value[2]));
                     if (loraParametersDialog != null) {
                         if (mTimeoutHandler != null ) {
@@ -278,34 +283,34 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
                         }
                         loraParametersDialog.onReceiveData(value);
                     }
-					if(value[2]<loraCount) {
-						StringBuffer addr = new StringBuffer();
-						for(int i=0; i<5; i++) {
-							int intVal = value[3+i] & 0xff;
-							if (intVal < 0x10) addr.append("0");
-							addr.append(Integer.toHexString(intVal));
-						}
-						loraItems.add(new LoraItem(addr.toString()));
-						loraAdapter.notifyDataSetChanged();
+//					if(value[2]<loraCount) {
+//						StringBuffer addr = new StringBuffer();
+//						for(int i=0; i<5; i++) {
+//							int intVal = value[3+i] & 0xff;
+//							if (intVal < 0x10) addr.append("0");
+//							addr.append(Integer.toHexString(intVal));
+//						}
+//						loraItems.add(new LoraItem(addr.toString()));
+//					loraAdapter.notifyDataSetChanged();
 
-					}
+//					}
 				} break;
 				// CHAR_LORA_DATA
-				case 2 : {
-
-				} break;
+//				case 2 : {
+//
+//				} break;
 				// CHAR_LORA_GET
-				case 3 : {
-
-				} break;
+//				case 3 : {
+//
+//				} break;
 				// CHAR_LORA_ADD
-				case 4 : {
-
-				} break;
+//				case 4 : {
+//
+//				} break;
 				// CHAR_LORA_DEL
-				case 5 : {
-
-				} break;
+//				case 5 : {
+//
+//				} break;
 				default: break;
 			};
 		});
@@ -313,6 +318,12 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 		viewModel.getStatusState().observe(this, value -> {
 
 		});
+
+		viewModel.getLoraItems().observe(this, value -> {
+			loraAdapter.notifyDataSetChanged();
+			Log.e("LORA_items ", Integer.toString(loraAdapter.getCount()));
+		});
+
 
 		//loraParametersDialog = new LoraParametersFragment();
 		//viewModel.getButtonState().observe(this, pressed -> buttonState.setText(pressed ? R.string.button_pressed : R.string.button_released));
@@ -339,14 +350,11 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 	View.OnClickListener addLoraClicked = new View.OnClickListener() {
 		@Override
 		public void onClick(View v) {
-            // TODO Auto-generated method stub
-
 			AlertDialog.Builder builder = new AlertDialog.Builder(BlinkyActivity.this);
 			if(addLoraInput.getParent()!=null)
 				((ViewGroup)addLoraInput.getParent()).removeView(addLoraInput); // <- fix
 			builder.setView(addLoraInput);
 			builder.setTitle("Add LoRa")
-					//.setMessage("Покормите кота!")
 					//.setIcon(R.drawable.ic_android_cat)
 					.setCancelable(true)
 					//.setView(addLoraInput)
@@ -357,20 +365,28 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 								}
 							})
 					.setPositiveButton("OK",
-					new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int id) {
-							loraItems.add(new LoraItem( addLoraInput.getText().toString()));
-							addLoraInput.setText("");
-							loraAdapter.notifyDataSetChanged();
-							dialog.cancel();
-						}
-					});
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog, int id) {
+									String str = addLoraInput.getText().toString();
+									if(checkAddrBytes(str)) {
+										viewModel.addLora(getAddrBytes(str));
+										mTimeoutHandler = new Handler();
+										mTimeoutHandler.postDelayed(new Runnable() {
+											public void run() {
+
+											}
+										}, 5000);
+									} else {
+										Log.e("addLora", "Failed addr lenght");
+										Toast.makeText(getApplicationContext(),"Неверная длина адреса", Toast.LENGTH_SHORT);
+									}
+
+									dialog.cancel();
+								}
+							});
 			AlertDialog alert = builder.create();
 			alert.show();
-
-
-
-        }
+		}
 	};
 
 	@Override
@@ -385,7 +401,7 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 
     @Override
     public void OnClickLoraItem(int index, String address) {
-        viewModel.requestInfo();
+		viewModel.getLora(index);
         FragmentManager fm = getSupportFragmentManager();
         loraParametersDialog = LoraParametersFragment.newInstance(index, address);
         loraParametersDialog.show(fm, "Add Lora");
@@ -403,15 +419,46 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 
     @Override
     public void OnDeleteClick(int index, String address) {
-        mTimeoutHandler = new Handler();
-        mTimeoutHandler.postDelayed(new Runnable() {
+		if (checkAddrBytes(address)) {
+			viewModel.deleteLora(getAddrBytes(address));
+			mTimeoutHandler = new Handler();
+			mTimeoutHandler.postDelayed(new Runnable() {
 
-            public void run() {
-                loraParametersDialog.dismiss();
-                loraParametersDialog = null;
-            }
-        }, 5000);
-    }
+				public void run() {
+				    if (loraParametersDialog != null) {
+                        loraParametersDialog.dismiss();
+                    }
+					loraParametersDialog = null;
+				}
+			}, 5000);
+		}
 
+	}
 
+	boolean checkAddrBytes(String str) {
+		if(str.length()==10) {
+			char[] chars = str.toCharArray();
+			for (int i = 0; i < chars.length; i++) {
+				if((chars[i]>='0' && chars[i]<='9') || (chars[i]>='A' && chars[i]<='F') || (chars[i]>='a' && chars[i]<='f')) {
+				} else return false;
+			}
+			return true;
+		} else return false;
+	};
+
+	public byte[] getAddrBytes(String str) {
+		char[] chars = str.toCharArray();
+		byte[] addrByte = new byte[chars.length];
+		for(int i= 0; i < chars.length; i++) {
+			if(chars[i]>='0' && chars[i]<='9') addrByte[i] = (byte) (chars[i] - '0');
+			else if(chars[i]>='a' && chars[i]<='f') addrByte[i] = (byte) (chars[i] - 'a' + 10);
+			else addrByte[i] = (byte) (chars[i] - 'A' + 10);
+		}
+		byte addr[] = new byte[5];
+		for(int i= 0; i < addr.length; i++) {
+			addr[i] = (byte) (addrByte[i*2]*16);
+			addr[i] += addrByte[i*2+1];
+		}
+		return addr;
+	};
 }

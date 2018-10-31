@@ -11,7 +11,7 @@ public class LoraItem  {
 
     private String address;
     private Context ctx;
-    LoraItem( String _addrress) {
+    public LoraItem( String _addrress) {
         address = _addrress;
     }
 

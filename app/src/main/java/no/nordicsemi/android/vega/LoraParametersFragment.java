@@ -4,11 +4,15 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
+import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
 
 import static android.view.View.GONE;
 
@@ -104,10 +108,46 @@ public class LoraParametersFragment extends DialogFragment {
         }
     }
 
-    public void onReceiveData(byte[] addr) {
+    int bitRead(byte b, int bitPos)
+    {
+        int x = b & (1 << bitPos);
+        return x == 0 ? 0 : 1;
+    }
+
+    public void onReceiveData(byte[] data) {
 //        if (mListener != null) {
- //           mListener.OnClick();
- //       }
+        //           mListener.OnClick();
+        //       }
+        //data[2]
+
+        Log.e("LoRa", "getData index = " + data[2]);
+        Log.e("Events" , String.valueOf(data[3]));
+        Log.e("RSSI" , String.valueOf(data[5]));
+        Log.e("Bat" , String.valueOf(data[4]));
+
+        TextView lora_battery = mParametersView.findViewById(R.id.lora_battery);
+        TextView lora_rssi    = mParametersView.findViewById(R.id.lora_rssi);
+        TextView lora_hall1   = mParametersView.findViewById(R.id.lora_hall1);
+        TextView lora_hall2   = mParametersView.findViewById(R.id.lora_hall2);
+        TextView lora_jumper  = mParametersView.findViewById(R.id.lora_jumper);
+        TextView lora_tamper  = mParametersView.findViewById(R.id.lora_tamper);
+        TextView lora_accel   = mParametersView.findViewById(R.id.lora_accel);
+        TextView lora_axis    = mParametersView.findViewById(R.id.lora_axis);
+        TextView lora_temp    = mParametersView.findViewById(R.id.lora_temp);
+
+        lora_battery.setText("Battery: " + String.valueOf(data[4]));
+        lora_rssi.setText("RSSI: " + String.valueOf(data[5]));
+
+        lora_jumper.setText("Jumper: " + String.valueOf(bitRead(data[5], 0)));
+        lora_hall1.setText("Hall 1: " + String.valueOf(bitRead(data[5], 1)));
+        lora_hall2.setText("Hall 2: " + String.valueOf(bitRead(data[5], 2)));
+        lora_tamper.setText("Tamper: " + String.valueOf(bitRead(data[5], 3)));
+        lora_accel.setText("Accel: " + String.valueOf(bitRead(data[5], 4)));
+
+        final FloatBuffer fb = ByteBuffer.wrap(data).asFloatBuffer();
+        final float[] dst = new float[fb.capacity()];
+        fb.get(dst); // Copy the contents of the FloatBuffer into dst
+        lora_temp.setText("Temp: " + String.valueOf(dst[0]));
 
 
         mProgressBar.setVisibility(GONE);
