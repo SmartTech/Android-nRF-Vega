@@ -281,6 +281,7 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 			}
 		});
 
+/*
         viewModel.getStatusState().observe(this, value -> {
             Log.e("getStatusState", String.valueOf(value[1]));
             byte data[] = new byte[]{value[2], value[3], value[4], value[5]};
@@ -319,11 +320,35 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
                 default: break;
             };
         });
+*/
+
+		viewModel.getStatusOID().observe(this, value -> {
+			TextView info_oid = findViewById(R.id.info_device_oid_value);
+			info_oid.setText(String.valueOf(value));
+		});
+
+		viewModel.getStatusBat().observe(this, value -> {
+			TextView info_bat = findViewById(R.id.info_device_bat_value);
+			info_bat.setText(String.valueOf(value) + "%");
+		});
+
+		viewModel.getStatusTemp().observe(this, value -> {
+			String str = String.format("%.01f", value) + "°C";
+			TextView info_temp = findViewById(R.id.info_device_temp_value);
+			info_temp.setText(str);
+		});
+
+		viewModel.getStatusCurrent().observe(this, value -> {
+			String str = String.format("%.02f", value) + "mAh";
+			TextView info_state = findViewById(R.id.info_device_state_value);
+			info_state.setText(str);
+		});
 
 		viewModel.getLoraItems().observe(this, value -> {
 			loraAdapter.notifyDataSetChanged();
 			Log.e("LORA_items ", Integer.toString(loraAdapter.getCount()));
 		});
+
 
 
 		//loraParametersDialog = new LoraParametersFragment();
