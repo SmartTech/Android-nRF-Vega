@@ -45,8 +45,8 @@ public class LoraParametersFragment extends DialogFragment {
         // Required empty public constructor
     }
     public interface LoraDataListener {
-        void OnDeleteClick(int index, String address);
-
+        void OnLoraDeleteClick(int index, String address);
+        void OnLoraCloseClick();
     }
 
     /**
@@ -88,25 +88,44 @@ public class LoraParametersFragment extends DialogFragment {
         mProgressBar = view.findViewById(R.id.lora_progress);
         mParametersView = view.findViewById(R.id.lora_parameters);
 
-        Button but = (Button) view.findViewById(R.id.lora_del_but);
-        but.setOnClickListener( new View.OnClickListener() {
+        Button btnDelete = view.findViewById(R.id.btn_lora_delete);
+        btnDelete.setOnClickListener( new View.OnClickListener() {
 
                                     @Override
                                     public void onClick(View v) {
-                                        onButtonPressed(mIndex, mAddress);
+                                        onDeletePressed(mIndex, mAddress);
                                     }
                                 }
         );
+
+        Button btnClose = view.findViewById(R.id.btn_lora_cancel);
+        btnClose.setOnClickListener( new View.OnClickListener() {
+
+                                    @Override
+                                    public void onClick(View v) {
+                                        onClosePressed();
+                                    }
+                                }
+        );
+
         return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(int index, String address) {
+    public void onDeletePressed(int index, String address) {
         if (mListener != null) {
-            mListener.OnDeleteClick(index, address );
-            mProgressBar.setVisibility(View.VISIBLE);
-            mParametersView.setVisibility(View.GONE);
+            mListener.OnLoraDeleteClick(index, address);
         }
+        mProgressBar.setVisibility(View.VISIBLE);
+        mParametersView.setVisibility(View.GONE);
+    }
+
+    public void onClosePressed() {
+        if (mListener != null) {
+            mListener.OnLoraCloseClick();
+        }
+        mProgressBar.setVisibility(View.GONE);
+        mParametersView.setVisibility(View.GONE);
     }
 
     int bitRead(byte b, int bitPos)
@@ -158,7 +177,7 @@ public class LoraParametersFragment extends DialogFragment {
         Log.e("Temp" , String.format("%.01f", temp) + "°C");
         Log.e("Bat" , String.valueOf(data[4]));
 
-        mProgressBar.setVisibility(GONE);
+        mProgressBar.setVisibility(View.GONE);
         mParametersView.setVisibility(View.VISIBLE);
     }
 

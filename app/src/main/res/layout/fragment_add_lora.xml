@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/frameLayout"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_margin="10dp"
     android:orientation="vertical"
@@ -16,14 +16,15 @@
         style="?android:attr/progressBarStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="visible"
         android:layout_gravity="center_horizontal|center" />
 
     <LinearLayout
         android:id="@+id/lora_parameters"
-        android:layout_width="500dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:visibility="gone">
+        android:visibility="invisible">
 
         <TextView
             android:id="@+id/lora_address"
@@ -84,6 +85,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Moving" />
+
         <TextView
             android:id="@+id/lora_axis"
             android:layout_width="match_parent"
@@ -96,11 +98,28 @@
             android:layout_height="wrap_content"
             android:text="Counter" />
 
-        <Button
-            android:id="@+id/lora_del_but"
-            android:layout_width="match_parent"
+
+        <LinearLayout
+            android:id="@+id/btn_layout"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Delete" />
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_lora_delete"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="Удалить" />
+
+            <Button
+                android:id="@+id/btn_lora_cancel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="Закрыть" />
+
+        </LinearLayout>
 
 
     </LinearLayout>

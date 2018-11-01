@@ -483,7 +483,7 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
     }
 
     @Override
-    public void OnDeleteClick(int index, String address) {
+    public void OnLoraDeleteClick(int index, String address) {
 		if (checkAddrBytes(address)) {
 			viewModel.deleteLora(getAddrBytes(address));
 			mTimeoutHandler = new Handler();
@@ -498,6 +498,11 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 			}, 5000);
 		}
 
+	}
+
+	@Override
+	public void OnLoraCloseClick() {
+		loraParametersDialog.dismiss();
 	}
 
 	boolean checkAddrBytes(String str) {
