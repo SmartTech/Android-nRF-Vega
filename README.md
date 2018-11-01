@@ -11,7 +11,9 @@ Vega UUID: `9c201400-1c13-8b49-9236-040a580c61b8`
 ### Standard BLE Services
 
 DIS UUID: 0000180A-0000-1000-8000-00805F9B34FB (DeviceInformationService)
+
 HTS UUID: 00002A1C-0000-1000-8000-00805F9B34FB (HealthTemperatureService) - пока не работает
+
 BAS UUID: (BatteryService)
 
 ### Требования
