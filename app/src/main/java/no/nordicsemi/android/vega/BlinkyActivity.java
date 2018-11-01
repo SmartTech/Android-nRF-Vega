@@ -62,9 +62,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-
 import no.nordicsemi.android.vega.adapter.ExtendedBluetoothDevice;
 import no.nordicsemi.android.vega.adapter.LoraAdapter;
 import no.nordicsemi.android.vega.utils.Utils;
@@ -85,6 +82,7 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 	LoraAdapter loraAdapter;
 
 	Button armControlBtn;
+    Button wakeBtn;
 	Button addLoraBtn;
 
 	AlertDialog.Builder addLoraBuilder;
@@ -170,6 +168,8 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 		armControlBtn = findViewById(R.id.arm_control_btn);
 		armControlBtn.setOnClickListener(armControlClicked);
 
+        wakeBtn = findViewById(R.id.button_wake);
+        wakeBtn.setOnClickListener(btnWakeClicked);
 		armProgressBar = findViewById(R.id.arm_progress_bar);
 		armProgressBar.setVisibility(View.GONE);
 
@@ -189,7 +189,7 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 			mSerial.setText(Utils.byteArrayToHexString(serial));
 		});
 
-		mTempValue = findViewById(R.id.info_device_temp_value);
+		//mTempValue = findViewById(R.id.info_device_temp_value);
 
 		viewModel.getTemperature().observe(this, temp -> {
 			mTempValue.setText(temp.toString());
@@ -322,6 +322,16 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
         });
 */
 
+        viewModel.getWakeState().observe(this, value -> {
+            TextView sleep_state = findViewById(R.id.info_device_sleep_value);
+            if(value>0) {
+                sleep_state.setText("Активна");
+                wakeBtn.setVisibility(View.GONE);
+            } else {
+                sleep_state.setText("Во сне");
+                wakeBtn.setVisibility(View.VISIBLE);
+            }
+        });
 		viewModel.getStatusOID().observe(this, value -> {
 			TextView info_oid = findViewById(R.id.info_device_oid_value);
 			info_oid.setText(String.valueOf(value));
@@ -349,12 +359,32 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 			Log.e("LORA_items ", Integer.toString(loraAdapter.getCount()));
 		});
 
-
-
-		//loraParametersDialog = new LoraParametersFragment();
-		//viewModel.getButtonState().observe(this, pressed -> buttonState.setText(pressed ? R.string.button_pressed : R.string.button_released));
 		Log.e("TEST", "Test");
 	}
+
+
+    View.OnClickListener btnWakeClicked = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            AlertDialog.Builder wakeBuilder = new AlertDialog.Builder(BlinkyActivity.this);
+            wakeBuilder.setTitle("Пробудить пломбу?");
+            wakeBuilder.setPositiveButton("Да", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    viewModel.wake();
+                    dialog.cancel();
+                }
+            });
+            wakeBuilder.setNegativeButton("Нет", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            AlertDialog alert = wakeBuilder.create();
+            alert.show();
+        }
+    };
 
 	View.OnClickListener armControlClicked = new View.OnClickListener() {
 		@Override
@@ -390,6 +420,8 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 							dialog.cancel();
 						}
 					});
+                    AlertDialog alert = disarmBuilder.create();
+                    alert.show();
 				} break;
 				default: break;
 			}
@@ -404,35 +436,33 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 				((ViewGroup)addLoraInput.getParent()).removeView(addLoraInput);
 			builder.setView(addLoraInput);
 			builder.setTitle("Add LoRa")
-					//.setIcon(R.drawable.ic_android_cat)
-					.setCancelable(true)
-					//.setView(addLoraInput)
-					.setNegativeButton("Cancel",
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog, int id) {
-									dialog.cancel();
-								}
-							})
-					.setPositiveButton("OK",
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog, int id) {
-									String str = addLoraInput.getText().toString();
-									if(checkAddrBytes(str)) {
-										viewModel.addLora(getAddrBytes(str));
-										mTimeoutHandler = new Handler();
-										mTimeoutHandler.postDelayed(new Runnable() {
-											public void run() {
+				.setCancelable(true)
+				.setNegativeButton("Cancel",
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								dialog.cancel();
+							}
+						})
+				.setPositiveButton("OK",
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								String str = addLoraInput.getText().toString();
+								if(checkAddrBytes(str)) {
+									viewModel.addLora(getAddrBytes(str));
+									mTimeoutHandler = new Handler();
+									mTimeoutHandler.postDelayed(new Runnable() {
+										public void run() {
 
-											}
-										}, 5000);
-									} else {
-										Log.e("addLora", "Failed addr lenght");
-										Toast.makeText(getApplicationContext(),"Неверная длина адреса", Toast.LENGTH_SHORT);
-									}
-
-									dialog.cancel();
+										}
+									}, 5000);
+								} else {
+									Log.e("addLora", "Failed addr lenght");
+									Toast.makeText(getApplicationContext(),"Неверная длина адреса", Toast.LENGTH_SHORT);
 								}
-							});
+
+								dialog.cancel();
+							}
+						});
 			AlertDialog alert = builder.create();
 			alert.show();
 		}
@@ -456,14 +486,11 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
         loraParametersDialog.show(fm, "Add Lora");
         mTimeoutHandler = new Handler();
         mTimeoutHandler.postDelayed(new Runnable() {
-
             public void run() {
                 loraParametersDialog.dismiss();
                 loraParametersDialog = null;
             }
         }, 5000);
-
-
     }
 
     @Override
@@ -472,7 +499,6 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 			viewModel.deleteLora(getAddrBytes(address));
 			mTimeoutHandler = new Handler();
 			mTimeoutHandler.postDelayed(new Runnable() {
-
 				public void run() {
 				    if (loraParametersDialog != null) {
                         loraParametersDialog.dismiss();
@@ -481,7 +507,6 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 				}
 			}, 5000);
 		}
-
 	}
 
 	@Override

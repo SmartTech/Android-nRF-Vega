@@ -37,7 +37,6 @@ import android.arch.lifecycle.MutableLiveData;
 import android.bluetooth.BluetoothDevice;
 import android.support.annotation.NonNull;
 import android.util.Log;
-import android.widget.TextView;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -69,6 +68,7 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
     private final MutableLiveData<byte[]> mSerialNumber = new MutableLiveData<>();
     private final MutableLiveData<Integer> mTemperature = new MutableLiveData<>();
 	private final MutableLiveData<byte[]> mLoraState = new MutableLiveData<>();
+	private final MutableLiveData<Integer> mWakeState = new MutableLiveData<>();
 	//private final MutableLiveData<byte[]> mStatusState = new MutableLiveData<>();
 	private final MutableLiveData<Integer> mStatusOID = new MutableLiveData<>();
 	private final MutableLiveData<Float> mStatusTemp = new MutableLiveData<>();
@@ -113,6 +113,7 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 	public MutableLiveData<byte[]> getLoraState() {
 		return mLoraState;
 	}
+	public MutableLiveData<Integer> getWakeState() { return mWakeState;	}
 //	public LiveData<byte[]> getStatusState() {
 //		return mStatusState;
 //	}
@@ -127,8 +128,6 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 	public MutableLiveData<ArrayList<LoraItem>> getLoraItems() {
 		return mLoraItems;
 	}
-
-
 
     public BlinkyViewModel(@NonNull final Application application) {
 		super(application);
@@ -155,6 +154,12 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 		mBlinkyManager.disconnect();
 	}
 
+	// Пробудить пломбу
+	public void wake() {
+		final byte[] command = {5};
+		mBlinkyManager.write(command);
+		Log.e("ble", "requestInfo " );
+	}
 	// Запрос всей информации
 	public void requestInfo() {
         final byte[] command = {2};
@@ -239,7 +244,6 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 			// CHAR_LORA_ADDR
 			case 1 : {
 				int loraIndex = data[2];
-//				if(data[2]<mLoraItems.getValue().size()) {
 				StringBuffer addr = new StringBuffer();
 				for(int i=0; i<5; i++) {
 					int intVal = data[3+i] & 0xff;
@@ -248,7 +252,6 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 				}
 				mLoraItems.getValue().add(new LoraItem(addr.toString()));
 				Log.e("onCmdLora", "add addr[" + loraIndex + "] " + addr.toString());
-//				}
 				mLoraItems.postValue(mLoraItemsValues);
 			} break;
 			// CHAR_LORA_DATA
@@ -274,7 +277,8 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 		};
 	}
 
-	void onCmdInfo(final byte[] data) {
+	void onCmdInfo(int subCmd, final byte[] data) {
+		Log.e("onCmdLora", "subCmd = " + subCmd);
 
 	}
 
@@ -305,42 +309,38 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 				switch(data[1]) {
 					// CHAR_INFO_OID
 					case 0 : {
-						int oid = ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN).getInt();
+						int oid = ByteBuffer.wrap(valdata).order(ByteOrder.LITTLE_ENDIAN).getInt();
 						mStatusOID.postValue(oid);
-//						TextView info_oid = findViewById(R.id.info_device_oid_value);
-//						info_oid.setText(String.valueOf(oid));
 						Log.e("CHAR_INFO_OID", String.valueOf(oid));
 					} break;
 					// CHAR_INFO_BAT
 					case 1 : {
-						int bat = ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN).getInt();
+						int bat = ByteBuffer.wrap(valdata).order(ByteOrder.LITTLE_ENDIAN).getInt();
 						mStatusBat.postValue(bat);
-//						TextView info_bat = findViewById(R.id.info_device_bat_value);
-//						info_bat.setText(String.valueOf(bat) + "%");
 						Log.e("CHAR_INFO_BAT", String.valueOf(bat));
 					} break;
 					// CHAR_INFO_TEMP
 					case 2 : {
-						float temp = ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN).getFloat();
+						float temp = ByteBuffer.wrap(valdata).order(ByteOrder.LITTLE_ENDIAN).getFloat();
 						mStatusTemp.postValue(temp);
 						String str = String.format("%.01f", temp) + "°C";
-//						TextView info_temp = findViewById(R.id.info_device_temp_value);
-//						info_temp.setText(str);
 						Log.e("CHAR_INFO_TEMP", str);
 					} break;
 					// CHAR_INFO_CURRENT
 					case 3 : {
-						float current = ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN).getFloat();
+						float current = ByteBuffer.wrap(valdata).order(ByteOrder.LITTLE_ENDIAN).getFloat();
 						mStatusCurrent.postValue(current);
 						String str = String.format("%.02f", current) + "mAh";
-//						TextView info_state = findViewById(R.id.info_device_state_value);
-//						info_state.setText(str);
 						Log.e("CHAR_INFO_CURRENT", str);
 					} break;
 					default: break;
 				};
 			} break;
-			default: {
+			// CHAR_CMD_WAKE
+			case 5 : {
+				mWakeState.postValue(subCmd);
+			} break;
+				default: {
 				Log.e("onDataReceived", "Unknown cmd");
 				break;
 			}
