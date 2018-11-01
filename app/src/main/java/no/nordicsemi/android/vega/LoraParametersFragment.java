@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
 import static android.view.View.GONE;
@@ -120,11 +121,6 @@ public class LoraParametersFragment extends DialogFragment {
         //       }
         //data[2]
 
-        Log.e("LoRa", "getData index = " + data[2]);
-        Log.e("Events" , String.valueOf(data[3]));
-        Log.e("RSSI" , String.valueOf(data[5]));
-        Log.e("Bat" , String.valueOf(data[4]));
-
         TextView lora_battery = mParametersView.findViewById(R.id.lora_battery);
         TextView lora_rssi    = mParametersView.findViewById(R.id.lora_rssi);
         TextView lora_hall1   = mParametersView.findViewById(R.id.lora_hall1);
@@ -144,11 +140,15 @@ public class LoraParametersFragment extends DialogFragment {
         lora_tamper.setText("Tamper: " + String.valueOf(bitRead(data[5], 3)));
         lora_accel.setText("Accel: " + String.valueOf(bitRead(data[5], 4)));
 
-        final FloatBuffer fb = ByteBuffer.wrap(data).asFloatBuffer();
-        final float[] dst = new float[fb.capacity()];
-        fb.get(dst); // Copy the contents of the FloatBuffer into dst
-        lora_temp.setText("Temp: " + String.valueOf(dst[0]));
+        byte dataTemp[] = new byte[]{data[6], data[7], data[8], data[9]};
+        float temp = ByteBuffer.wrap(dataTemp).order(ByteOrder.LITTLE_ENDIAN).getFloat();
+        lora_temp.setText("Temp: " + String.format("%.01f", temp) + "°C");
 
+        Log.e("LoRa", "getData index = " + data[2]);
+        Log.e("Events" , String.valueOf(data[3]));
+        Log.e("RSSI" , String.valueOf(data[5]));
+        Log.e("Temp" , String.format("%.01f", temp) + "°C");
+        Log.e("Bat" , String.valueOf(data[4]));
 
         mProgressBar.setVisibility(GONE);
         mParametersView.setVisibility(View.VISIBLE);

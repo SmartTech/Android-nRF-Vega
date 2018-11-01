@@ -260,58 +260,21 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 		viewModel.getLoraState().observe(this, value -> {
 			// CHAR_CMD_LORA events
             Log.e("Observed lora state", String.valueOf(value[1]) );
+			// CHAR_CMD_LORA events
 			switch(value[1]) {
-				// CHAR_LORA_COUNT
-
-//				case 0 : {
-//					if(loraCount>0) {
-//						loraItems.clear();
-//						loraAdapter.notifyDataSetChanged();
-//					}
-//					loraCount = value[2];
-//					Log.e("LORA_count", "Unknown");
-//				} break;
-
-				// CHAR_LORA_ADDR
-				case 2 : {
-					Log.e("LORA_addr", String.valueOf(value[2]));
-                    if (loraParametersDialog != null) {
-                        if (mTimeoutHandler != null ) {
-                            mTimeoutHandler.removeCallbacksAndMessages(null);
-                            mTimeoutHandler = null;
-                        }
-                        loraParametersDialog.onReceiveData(value);
-                    }
-//					if(value[2]<loraCount) {
-//						StringBuffer addr = new StringBuffer();
-//						for(int i=0; i<5; i++) {
-//							int intVal = value[3+i] & 0xff;
-//							if (intVal < 0x10) addr.append("0");
-//							addr.append(Integer.toHexString(intVal));
-//						}
-//						loraItems.add(new LoraItem(addr.toString()));
-//					loraAdapter.notifyDataSetChanged();
-
-//					}
-				} break;
 				// CHAR_LORA_DATA
-//				case 2 : {
-//
-//				} break;
-				// CHAR_LORA_GET
-//				case 3 : {
-//
-//				} break;
-				// CHAR_LORA_ADD
-//				case 4 : {
-//
-//				} break;
-				// CHAR_LORA_DEL
-//				case 5 : {
-//
-//				} break;
+				case 2 : {
+					Log.e("LORA_data", String.valueOf(value[2]));
+					if (loraParametersDialog != null) {
+						if (mTimeoutHandler != null ) {
+							mTimeoutHandler.removeCallbacksAndMessages(null);
+							mTimeoutHandler = null;
+						}
+						loraParametersDialog.onReceiveData(value);
+					}
+				} break;
 				default: break;
-			};
+			}
 		});
 
         viewModel.getStatusState().observe(this, value -> {

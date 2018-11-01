@@ -238,7 +238,7 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 			} break;
 			// CHAR_LORA_DATA
 			case 2 : {
-
+				mLoraState.postValue(data);
 			} break;
 			// CHAR_LORA_GET
 			case 3 : {
@@ -281,7 +281,6 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 			// CHAR_CMD_LORA
 			case 1 : {
 				onCmdLora(subCmd, data);
-				//mLoraState.postValue(data);
 			} break;
 			// CHAR_CMD_INFO
 			case 3 : {
