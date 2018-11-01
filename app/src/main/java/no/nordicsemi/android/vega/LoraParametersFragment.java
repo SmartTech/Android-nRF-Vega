@@ -84,7 +84,7 @@ public class LoraParametersFragment extends DialogFragment {
         TextView index = view.findViewById(R.id.lora_index);
         index.setText("Index: " + mIndex);
         TextView address = view.findViewById(R.id.lora_address);
-        address.setText("Adderss: " + mAddress);
+        address.setText("Address: " + mAddress);
         mProgressBar = view.findViewById(R.id.lora_progress);
         mParametersView = view.findViewById(R.id.lora_parameters);
 
@@ -130,6 +130,7 @@ public class LoraParametersFragment extends DialogFragment {
         TextView lora_accel   = mParametersView.findViewById(R.id.lora_accel);
         TextView lora_axis    = mParametersView.findViewById(R.id.lora_axis);
         TextView lora_temp    = mParametersView.findViewById(R.id.lora_temp);
+        TextView lora_counter = mParametersView.findViewById(R.id.lora_counter);
 
         lora_battery.setText("Battery: " + String.valueOf(data[4]));
         lora_rssi.setText("RSSI: " + String.valueOf(data[5]));
@@ -143,6 +144,13 @@ public class LoraParametersFragment extends DialogFragment {
         byte dataTemp[] = new byte[]{data[6], data[7], data[8], data[9]};
         float temp = ByteBuffer.wrap(dataTemp).order(ByteOrder.LITTLE_ENDIAN).getFloat();
         lora_temp.setText("Temp: " + String.format("%.01f", temp) + "°C");
+
+        //byte dataCounter[] = new byte[]{data[10], data[11]};
+        int counter = data[11];
+        counter <<= 8;
+        counter |= data[10];
+        //long counter = ByteBuffer.wrap(dataCounter).order(ByteOrder.LITTLE_ENDIAN).getLong();
+        lora_counter.setText("Counter: " + String.valueOf(counter));
 
         Log.e("LoRa", "getData index = " + data[2]);
         Log.e("Events" , String.valueOf(data[3]));
