@@ -67,6 +67,7 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
     private final MutableLiveData<Integer> mTemperature = new MutableLiveData<>();
 	private final MutableLiveData<byte[]> mLoraState = new MutableLiveData<>();
 	private final MutableLiveData<byte[]> mStatusState = new MutableLiveData<>();
+	private final MutableLiveData<Integer> mWakeState = new MutableLiveData<>();
     private final ArrayList<LoraItem> mLoraItemsValues = new ArrayList<LoraItem>();
     private final MutableLiveData<ArrayList<LoraItem>> mLoraItems = new MutableLiveData<>();
 //	private int mLoraCount = 0;
@@ -86,23 +87,15 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 		return mIsConnected;
 	}
 
-	public LiveData<Boolean> getButtonState() {
-		return mButtonState;
-	}
-
-	public LiveData<Boolean> getLEDState() {
-		return mLEDState;
-	}
-
 	public LiveData<Integer> getArmState() {
 		return mArmState;
 	}
 	public MutableLiveData<byte[]> getLoraState() {
 		return mLoraState;
 	}
-	public LiveData<byte[]> getStatusState() {
-		return mStatusState;
-	}
+	public MutableLiveData<byte[]> getStatusState() { return mStatusState;	}
+
+	public MutableLiveData<Integer> getWakeState() { return mWakeState;	}
 
     public LiveData<byte[]> getSerialNumber() {
         return mSerialNumber;
@@ -140,6 +133,13 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 		mBlinkyManager.disconnect();
 	}
 
+
+	// Пробудить пломбу
+	public void wake() {
+		final byte[] command = {5};
+		mBlinkyManager.write(command);
+		Log.e("ble", "requestInfo " );
+	}
 	// Запрос всей информации
 	public void requestInfo() {
         final byte[] command = {2};
@@ -259,7 +259,8 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 		};
 	}
 
-	void onCmdInfo(final byte[] data) {
+	void onCmdInfo(int subCmd, final byte[] data) {
+		Log.e("onCmdLora", "subCmd = " + subCmd);
 
 	}
 
@@ -284,14 +285,19 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 			} break;
 			// CHAR_CMD_INFO
 			case 3 : {
+				//onCmdInfo(subCmd, data);
 				mStatusState.postValue(data);
+			} break;
+			// CHAR_CMD_WAKE
+			case 5 : {
+				//onCmdInfo(subCmd, data);
+				mWakeState.postValue(subCmd);
 			} break;
 			default: {
 				Log.e("onDataReceived", "Unknown cmd");
 				break;
 			}
 		}
-
 	}
 
 	@Override

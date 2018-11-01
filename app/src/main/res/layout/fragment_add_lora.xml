@@ -31,7 +31,6 @@
             android:layout_height="wrap_content"
             android:text="Address" />
 
-
         <TextView
             android:id="@+id/lora_index"
             android:layout_width="wrap_content"
@@ -68,8 +67,6 @@
             android:layout_height="wrap_content"
             android:text="Jumper" />
 
-
-
         <TextView
             android:id="@+id/lora_hall1"
             android:layout_width="match_parent"
@@ -82,19 +79,22 @@
             android:layout_height="wrap_content"
             android:text="Hall sensor 2" />
 
-
         <TextView
             android:id="@+id/lora_accel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Moving" />
-
-
         <TextView
             android:id="@+id/lora_axis"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Position" />
+
+        <TextView
+            android:id="@+id/lora_counter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Counter" />
 
         <Button
             android:id="@+id/lora_del_but"
