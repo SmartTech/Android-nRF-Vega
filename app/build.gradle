@@ -56,8 +56,8 @@ dependencies {
     implementation 'no.nordicsemi.android:log:2.1.1'
     // Lifecycle extensions
     implementation 'android.arch.lifecycle:extensions:1.0.0'
+    implementation 'no.nordicsemi.android:ble:1.2.0'
     // BLE library
-    implementation project(':ble')
-    androidTestImplementation "androidx.arch.core:core-testing:2.0.0"
-    implementation 'junit:junit:4.12'
+//    include ':ble'
+//    project(':ble').projectDir = file('../Android-BLE-Library/ble')
 }
