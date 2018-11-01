@@ -305,7 +305,7 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 				switch(data[1]) {
 					// CHAR_INFO_OID
 					case 0 : {
-						int oid = ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN).getInt();
+						int oid = ByteBuffer.wrap(valdata).order(ByteOrder.LITTLE_ENDIAN).getInt();
 						mStatusOID.postValue(oid);
 //						TextView info_oid = findViewById(R.id.info_device_oid_value);
 //						info_oid.setText(String.valueOf(oid));
@@ -313,7 +313,7 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 					} break;
 					// CHAR_INFO_BAT
 					case 1 : {
-						int bat = ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN).getInt();
+						int bat = ByteBuffer.wrap(valdata).order(ByteOrder.LITTLE_ENDIAN).getInt();
 						mStatusBat.postValue(bat);
 //						TextView info_bat = findViewById(R.id.info_device_bat_value);
 //						info_bat.setText(String.valueOf(bat) + "%");
@@ -321,7 +321,7 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 					} break;
 					// CHAR_INFO_TEMP
 					case 2 : {
-						float temp = ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN).getFloat();
+						float temp = ByteBuffer.wrap(valdata).order(ByteOrder.LITTLE_ENDIAN).getFloat();
 						mStatusTemp.postValue(temp);
 						String str = String.format("%.01f", temp) + "°C";
 //						TextView info_temp = findViewById(R.id.info_device_temp_value);
@@ -330,7 +330,7 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 					} break;
 					// CHAR_INFO_CURRENT
 					case 3 : {
-						float current = ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN).getFloat();
+						float current = ByteBuffer.wrap(valdata).order(ByteOrder.LITTLE_ENDIAN).getFloat();
 						mStatusCurrent.postValue(current);
 						String str = String.format("%.02f", current) + "mAh";
 //						TextView info_state = findViewById(R.id.info_device_state_value);
