@@ -64,132 +64,6 @@
 			android:orientation="vertical">
 
 			<android.support.v7.widget.CardView
-				android:id="@+id/info_card"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_marginTop="5dp"
-				android:background="@android:color/white"
-				app:cardElevation="1dp">
-
-				<android.support.constraint.ConstraintLayout
-					android:id="@+id/info_container"
-					android:layout_width="match_parent"
-					android:layout_height="match_parent">
-
-					<android.support.v7.widget.Toolbar
-						android:id="@+id/info_tool_bar"
-						android:layout_width="0dp"
-						android:layout_height="?actionBarSize"
-						app:layout_constraintLeft_toLeftOf="parent"
-						app:layout_constraintRight_toRightOf="parent"
-						app:layout_constraintTop_toTopOf="parent"
-						app:logo="@drawable/ic_bluetooth_searching"
-						app:title="@string/title_device_name"
-						app:titleMarginStart="@dimen/toolbar_title_margin" />
-
-					<TextView
-						android:id="@+id/info_device_bat_value"
-						android:layout_width="0dp"
-						android:layout_height="wrap_content"
-						android:layout_marginEnd="8dp"
-						android:padding="@dimen/activity_horizontal_margin"
-						android:text="@string/charge_percent"
-						app:layout_constraintEnd_toEndOf="@+id/info_tool_bar" />
-
-					<TextView
-						android:id="@+id/info_device_serial"
-						android:layout_width="150dp"
-						android:layout_height="wrap_content"
-						android:layout_marginEnd="8dp"
-						android:padding="5dp"
-						android:text="@string/device_serial_number"
-						app:layout_constraintLeft_toLeftOf="parent"
-						app:layout_constraintTop_toBottomOf="@+id/info_tool_bar" />
-
-					<TextView
-						android:id="@+id/info_device_serial_value"
-						android:layout_width="wrap_content"
-						android:layout_height="wrap_content"
-						android:gravity="right"
-						android:padding="5dp"
-						android:text="value"
-						app:layout_constraintEnd_toEndOf="parent"
-						app:layout_constraintStart_toEndOf="@+id/info_device_serial"
-						app:layout_constraintTop_toTopOf="@+id/info_device_serial" />
-
-					<TextView
-						android:id="@+id/info_device_temp"
-						android:layout_width="150dp"
-						android:layout_height="wrap_content"
-						android:layout_marginEnd="8dp"
-						android:padding="5dp"
-						android:text="@string/device_temperature"
-						app:layout_constraintLeft_toLeftOf="parent"
-						app:layout_constraintTop_toBottomOf="@+id/info_device_serial" />
-
-					<TextView
-						android:id="@+id/info_device_temp_value"
-						android:layout_width="match_parent"
-						android:layout_height="wrap_content"
-						android:layout_marginEnd="8dp"
-						android:layout_marginStart="8dp"
-						android:padding="5dp"
-						android:text="value"
-						android:gravity="right"
-						app:layout_constraintEnd_toEndOf="parent"
-						app:layout_constraintStart_toEndOf="@+id/info_device_temp"
-						app:layout_constraintTop_toBottomOf="@+id/info_device_serial" />
-
-					<TextView
-						android:id="@+id/info_device_state"
-						android:layout_width="150dp"
-						android:layout_height="wrap_content"
-						android:layout_marginEnd="8dp"
-						android:padding="5dp"
-						android:text="@string/device_state"
-						app:layout_constraintLeft_toLeftOf="parent"
-						app:layout_constraintTop_toBottomOf="@+id/info_device_temp" />
-
-					<TextView
-						android:id="@+id/info_device_state_value"
-						android:layout_width="match_parent"
-						android:layout_height="wrap_content"
-						android:layout_marginEnd="8dp"
-						android:layout_marginStart="8dp"
-						android:padding="5dp"
-						android:text="value"
-						android:gravity="right"
-						app:layout_constraintEnd_toEndOf="parent"
-						app:layout_constraintStart_toEndOf="@+id/info_device_state"
-						app:layout_constraintTop_toBottomOf="@+id/info_device_temp" />
-
-					<TextView
-						android:id="@+id/info_device_oid"
-						android:layout_width="150dp"
-						android:layout_height="wrap_content"
-						android:layout_marginEnd="8dp"
-						android:padding="5dp"
-						android:text="@string/device_oid"
-						app:layout_constraintLeft_toLeftOf="parent"
-						app:layout_constraintTop_toBottomOf="@+id/info_device_state" />
-
-					<TextView
-						android:id="@+id/info_device_oid_value"
-						android:layout_width="match_parent"
-						android:layout_height="wrap_content"
-						android:layout_marginStart="8dp"
-						android:layout_marginEnd="8dp"
-						android:padding="5dp"
-						android:text="value"
-						android:gravity="right"
-						app:layout_constraintEnd_toEndOf="parent"
-						app:layout_constraintStart_toEndOf="@+id/info_device_state"
-						app:layout_constraintTop_toBottomOf="@+id/info_device_state" />
-
-				</android.support.constraint.ConstraintLayout>
-			</android.support.v7.widget.CardView>
-
-			<android.support.v7.widget.CardView
 				android:id="@+id/led_card"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
@@ -245,6 +119,136 @@
 						android:text="@string/arm_state_unknown"
 						app:layout_constraintStart_toEndOf="@+id/arm_progress_bar"
 						app:layout_constraintTop_toBottomOf="@+id/arm_tool_bar" />
+
+				</android.support.constraint.ConstraintLayout>
+			</android.support.v7.widget.CardView>
+
+
+			<android.support.v7.widget.CardView
+				android:id="@+id/info_card"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="5dp"
+				android:background="@android:color/white"
+				app:cardElevation="1dp">
+
+				<android.support.constraint.ConstraintLayout
+					android:id="@+id/info_container"
+					android:layout_width="match_parent"
+					android:layout_height="match_parent">
+
+					<TextView
+						android:id="@+id/info_device_serial"
+						android:layout_width="150dp"
+						android:layout_height="wrap_content"
+						android:layout_marginEnd="8dp"
+						android:padding="5dp"
+						android:text="@string/device_serial_number"
+						app:layout_constraintLeft_toLeftOf="parent"
+						app:layout_constraintTop_toBottomOf="parent" />
+
+					<TextView
+						android:id="@+id/info_device_serial_value"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:gravity="right"
+						android:padding="5dp"
+						android:text="value"
+						app:layout_constraintEnd_toEndOf="parent"
+						app:layout_constraintStart_toEndOf="@+id/info_device_serial"
+						app:layout_constraintTop_toTopOf="@+id/info_device_serial" />
+
+					<TextView
+						android:id="@+id/info_device_temp"
+						android:layout_width="150dp"
+						android:layout_height="wrap_content"
+						android:layout_marginEnd="8dp"
+						android:padding="5dp"
+						android:text="@string/device_temperature"
+						app:layout_constraintLeft_toLeftOf="parent"
+						app:layout_constraintTop_toBottomOf="@+id/info_device_serial" />
+
+					<TextView
+						android:id="@+id/info_device_temp_value"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:layout_marginEnd="8dp"
+						android:layout_marginStart="8dp"
+						android:padding="5dp"
+						android:text="value"
+						android:gravity="right"
+						app:layout_constraintEnd_toEndOf="parent"
+						app:layout_constraintStart_toEndOf="@+id/info_device_temp"
+						app:layout_constraintTop_toBottomOf="@+id/info_device_serial" />
+
+					<TextView
+						android:id="@+id/info_device_bat"
+						android:layout_width="150dp"
+						android:layout_height="wrap_content"
+						android:layout_marginEnd="8dp"
+						android:padding="5dp"
+						android:text="@string/device_battery"
+						app:layout_constraintLeft_toLeftOf="parent"
+						app:layout_constraintTop_toBottomOf="@+id/info_device_temp" />
+
+					<TextView
+						android:id="@+id/info_device_bat_value"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:layout_marginEnd="8dp"
+						android:layout_marginStart="8dp"
+						android:padding="5dp"
+						android:text="value"
+						android:gravity="right"
+						app:layout_constraintEnd_toEndOf="parent"
+						app:layout_constraintStart_toEndOf="@+id/info_device_bat"
+						app:layout_constraintTop_toBottomOf="@+id/info_device_temp" />
+
+					<TextView
+						android:id="@+id/info_device_state"
+						android:layout_width="150dp"
+						android:layout_height="wrap_content"
+						android:layout_marginEnd="8dp"
+						android:padding="5dp"
+						android:text="@string/device_state"
+						app:layout_constraintLeft_toLeftOf="parent"
+						app:layout_constraintTop_toBottomOf="@+id/info_device_bat" />
+
+					<TextView
+						android:id="@+id/info_device_state_value"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:layout_marginEnd="8dp"
+						android:layout_marginStart="8dp"
+						android:padding="5dp"
+						android:text="value"
+						android:gravity="right"
+						app:layout_constraintEnd_toEndOf="parent"
+						app:layout_constraintStart_toEndOf="@+id/info_device_state"
+						app:layout_constraintTop_toBottomOf="@+id/info_device_bat" />
+
+					<TextView
+						android:id="@+id/info_device_oid"
+						android:layout_width="150dp"
+						android:layout_height="wrap_content"
+						android:layout_marginEnd="8dp"
+						android:padding="5dp"
+						android:text="@string/device_oid"
+						app:layout_constraintLeft_toLeftOf="parent"
+						app:layout_constraintTop_toBottomOf="@+id/info_device_state" />
+
+					<TextView
+						android:id="@+id/info_device_oid_value"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:layout_marginStart="8dp"
+						android:layout_marginEnd="8dp"
+						android:padding="5dp"
+						android:text="value"
+						android:gravity="right"
+						app:layout_constraintEnd_toEndOf="parent"
+						app:layout_constraintStart_toEndOf="@+id/info_device_state"
+						app:layout_constraintTop_toBottomOf="@+id/info_device_state" />
 
 				</android.support.constraint.ConstraintLayout>
 			</android.support.v7.widget.CardView>

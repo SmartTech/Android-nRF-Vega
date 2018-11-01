@@ -37,6 +37,7 @@ package no.nordicsemi.android.vega;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -51,6 +52,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -110,6 +112,8 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_blinky);
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+		setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
 		final Intent intent = getIntent();
@@ -336,9 +340,32 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 			armState.setText(R.string.arm_check);
 			armControlBtn.setEnabled(false);
 			switch(armStateFlag) {
-				case 0 : viewModel.prearm();     break; // охрана снята
-				//case 1 : viewModel.armConfirm(); break; // ожидание троса
-				case 2 : viewModel.disarm();     break; // охрана установлена
+				// охрана снята
+				case 0: {
+					viewModel.prearm();
+				} break;
+				// ожидание троса
+				case 1 : {
+					//viewModel.armConfirm();
+				} break;
+				// охрана установлена
+				case 2 : {
+					AlertDialog.Builder disarmBuilder = new AlertDialog.Builder(BlinkyActivity.this);
+					disarmBuilder.setTitle("Снять с охраны?");
+					disarmBuilder.setPositiveButton("Снять", new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							viewModel.disarm();
+							dialog.cancel();
+						}
+					});
+					disarmBuilder.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							dialog.cancel();
+						}
+					});
+				} break;
 				default: break;
 			}
 		}
@@ -349,7 +376,7 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 		public void onClick(View v) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(BlinkyActivity.this);
 			if(addLoraInput.getParent()!=null)
-				((ViewGroup)addLoraInput.getParent()).removeView(addLoraInput); // <- fix
+				((ViewGroup)addLoraInput.getParent()).removeView(addLoraInput);
 			builder.setView(addLoraInput);
 			builder.setTitle("Add LoRa")
 					//.setIcon(R.drawable.ic_android_cat)
