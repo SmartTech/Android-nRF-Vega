@@ -85,9 +85,7 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 	LoraAdapter loraAdapter;
 
 	Button armControlBtn;
-    Button addLoraBtn;
-
-    Button wakeBtn;
+	Button addLoraBtn;
 
 	AlertDialog.Builder addLoraBuilder;
 	EditText addLoraInput;
@@ -172,9 +170,6 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 		armControlBtn = findViewById(R.id.arm_control_btn);
 		armControlBtn.setOnClickListener(armControlClicked);
 
-        wakeBtn = findViewById(R.id.button_wake);
-        wakeBtn.setOnClickListener(btnWakeClicked);
-
 		armProgressBar = findViewById(R.id.arm_progress_bar);
 		armProgressBar.setVisibility(View.GONE);
 
@@ -194,10 +189,10 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 			mSerial.setText(Utils.byteArrayToHexString(serial));
 		});
 
-		//mTempValue = findViewById(R.id.info_device_temp_value);
+		mTempValue = findViewById(R.id.info_device_temp_value);
 
 		viewModel.getTemperature().observe(this, temp -> {
-			//mTempValue.setText(temp.toString());
+			mTempValue.setText(temp.toString());
 		});
 
 		viewModel.isDeviceReady().observe(this, deviceReady -> {
@@ -286,6 +281,7 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 			}
 		});
 
+/*
         viewModel.getStatusState().observe(this, value -> {
             Log.e("getStatusState", String.valueOf(value[1]));
             byte data[] = new byte[]{value[2], value[3], value[4], value[5]};
@@ -323,53 +319,42 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
                 } break;
                 default: break;
             };
-            Log.e("test", "test");
         });
+*/
 
-        viewModel.getWakeState().observe(this, value -> {
-            TextView sleep_state = findViewById(R.id.info_device_sleep_value);
-            if(value>0) {
-                sleep_state.setText("Активна");
-                wakeBtn.setVisibility(View.GONE);
-            } else {
-                sleep_state.setText("Во сне");
-                wakeBtn.setVisibility(View.VISIBLE);
-            }
-        });
+		viewModel.getStatusOID().observe(this, value -> {
+			TextView info_oid = findViewById(R.id.info_device_oid_value);
+			info_oid.setText(String.valueOf(value));
+		});
+
+		viewModel.getStatusBat().observe(this, value -> {
+			TextView info_bat = findViewById(R.id.info_device_bat_value);
+			info_bat.setText(String.valueOf(value) + "%");
+		});
+
+		viewModel.getStatusTemp().observe(this, value -> {
+			String str = String.format("%.01f", value) + "°C";
+			TextView info_temp = findViewById(R.id.info_device_temp_value);
+			info_temp.setText(str);
+		});
+
+		viewModel.getStatusCurrent().observe(this, value -> {
+			String str = String.format("%.02f", value) + "mAh";
+			TextView info_state = findViewById(R.id.info_device_state_value);
+			info_state.setText(str);
+		});
 
 		viewModel.getLoraItems().observe(this, value -> {
 			loraAdapter.notifyDataSetChanged();
 			Log.e("LORA_items ", Integer.toString(loraAdapter.getCount()));
 		});
 
+
+
 		//loraParametersDialog = new LoraParametersFragment();
 		//viewModel.getButtonState().observe(this, pressed -> buttonState.setText(pressed ? R.string.button_pressed : R.string.button_released));
 		Log.e("TEST", "Test");
 	}
-
-
-    View.OnClickListener btnWakeClicked = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            AlertDialog.Builder wakeBuilder = new AlertDialog.Builder(BlinkyActivity.this);
-            wakeBuilder.setTitle("Пробудить пломбу?");
-            wakeBuilder.setPositiveButton("Да", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    viewModel.wake();
-                    dialog.cancel();
-                }
-            });
-            wakeBuilder.setNegativeButton("Нет", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.cancel();
-                }
-            });
-            AlertDialog alert = wakeBuilder.create();
-            alert.show();
-        }
-    };
 
 	View.OnClickListener armControlClicked = new View.OnClickListener() {
 		@Override
@@ -405,8 +390,6 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 							dialog.cancel();
 						}
 					});
-                    AlertDialog alert = disarmBuilder.create();
-                    alert.show();
 				} break;
 				default: break;
 			}
@@ -479,6 +462,7 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
                 loraParametersDialog = null;
             }
         }, 5000);
+
 
     }
 
