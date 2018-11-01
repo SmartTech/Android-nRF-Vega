@@ -194,21 +194,18 @@ public class BlinkyManager extends BleManager<BlinkyManagerCallbacks> {
 		@Override
 		public void onCharacteristicNotified(final BluetoothGatt gatt, final BluetoothGattCharacteristic characteristic) {
 			// This method is only called for Button characteristic
-			final byte[] data2 = characteristic.getValue();
+			final byte[] data = characteristic.getValue();
 			StringBuffer str = new StringBuffer();
-			for (byte b : data2) {
+			for (byte b : data) {
 				int intVal = b & 0xff;
 				if (intVal < 0x10) str.append("0");
 				str.append(Integer.toHexString(intVal));
 			}
 			if (characteristic == mEventCharacteristic) {
 				Log.e("TEST", "characteristic == mEventCharacteristic = " + str);
-				final int data = characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT32, 0);
-				final boolean buttonPressed = data == 0x01;
-				log(LogContract.Log.Level.APPLICATION, "Button " + (buttonPressed ? "pressed" : "released"));
-				mCallbacks.onDataReceived(data2);
+				mCallbacks.onDataReceived(data);
 			} else if (characteristic == mTemperatureCharacteristic) {
-				mCallbacks.onTemperatureReceived(Utils.TemperatureFromCharacteristicValue(data2));
+				mCallbacks.onTemperatureReceived(Utils.TemperatureFromCharacteristicValue(data));
 			}
 		}
 	};

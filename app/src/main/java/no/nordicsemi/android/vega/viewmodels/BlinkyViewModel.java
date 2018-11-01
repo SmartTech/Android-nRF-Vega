@@ -40,14 +40,13 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
-import butterknife.internal.Utils;
+import no.nordicsemi.android.log.LogSession;
+import no.nordicsemi.android.log.Logger;
 import no.nordicsemi.android.vega.LoraItem;
 import no.nordicsemi.android.vega.R;
 import no.nordicsemi.android.vega.adapter.ExtendedBluetoothDevice;
 import no.nordicsemi.android.vega.profile.BlinkyManager;
 import no.nordicsemi.android.vega.profile.BlinkyManagerCallbacks;
-import no.nordicsemi.android.log.LogSession;
-import no.nordicsemi.android.log.Logger;
 
 public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCallbacks {
 	private final BlinkyManager mBlinkyManager;
@@ -141,35 +140,57 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 		mBlinkyManager.disconnect();
 	}
 
-	public void toggleLED(final boolean onOff) {
-		mBlinkyManager.send((byte) (onOff?1:0));
-		mLEDState.setValue(onOff);
-	}
-
+	// Запрос всей информации
 	public void requestInfo() {
         final byte[] command = {2};
 		mBlinkyManager.write(command);
 		Log.e("ble", "requestInfo " );
 	}
-
+	// Подготовка к охране
 	public void prearm() {
         final byte[] command = {0, 0};
 		mBlinkyManager.write(command);
 	}
-
+	// Подтвердить постановку на охрану
 	public void armConfirm() {
         final byte[] command = {0, 1};
 		mBlinkyManager.write(command);
 	}
+	// Отменить постановку на охрану
 	public void armDiscard() {
         final byte[] command = {0, 2};
 		mBlinkyManager.write(command);
 	}
+	// Снять с охраны
 	public void disarm() {
         final byte[] command = {0, 3};
 		mBlinkyManager.write(command);
 	}
-
+	// Получить данные LoRa атчика по индексу
+	public void getLora(int index) {
+		Log.e("write", "getLora "+index);
+		final byte[] command = {1, 3, (byte) index};
+		mBlinkyManager.write(command);
+	}
+	// Добавить LoRa датчик
+	public void addLora(byte[] addr) {
+		Log.e("write", "addLora "+addr[0]+" "+addr[1]+" "+addr[2]+" "+addr[3]+" "+addr[4]);
+		final byte[] command = {1, 4, addr[0], addr[1], addr[2], addr[3], addr[4]};
+		mBlinkyManager.write(command);
+	}
+	// Удалить LoRa датчик по индексу
+	public void deleteLoraNum(int index) {
+		if(index>=0) {
+			final byte[] command = {1, 5, (byte) index};
+			mBlinkyManager.write(command);
+		}
+	}
+	// Удалить LoRa датчик по адресу
+	public void deleteLora(byte[] addr) {
+		Log.e("write", "deleteLora "+addr[0]+" "+addr[1]+" "+addr[2]+" "+addr[3]+" "+addr[4]);
+		final byte[] command = {1, 5, addr[0], addr[1], addr[2], addr[3], addr[4]};
+		mBlinkyManager.write(command);
+	}
 
 	@Override
 	protected void onCleared() {
@@ -179,34 +200,39 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 		}
 	}
 
-	@Override
-	public void onDataReceived(final byte[] data) {
+	int mLoraCount = 0;
+	void onCmdArm(int subCmd) {
+		switch(subCmd) {
+			default: {
+				Log.e("onCmdArm", "Unknown subCmd - " + subCmd);
+				break;
+			}
+		}
+	}
 
-		Log.e("onDataReceived", "cmd = "+data[0]);
-
-		if ( data.length > 0) {
-		switch(data[1]) {
+	void onCmdLora(int subCmd, final byte[] data) {
+		Log.e("onCmdLora", "subCmd = " + subCmd);
+		switch(subCmd) {
 			// CHAR_LORA_COUNT
-//			case 0 : {
-//				if(mLoraCount>0) {
-//					mLoraItems.getValue().clear();
-//				}
-//				mLoraCount = data[2];
-
-//				Log.e("mLORA_count", String.valueOf(mLoraCount));
-//			} break;
+			case 0 : {
+				if(mLoraCount>0) {
+					mLoraItems.getValue().clear();
+				}
+				mLoraCount = data[2];
+				Log.e("onCmdLora", "mLoraCount = " + mLoraCount);
+			} break;
 			// CHAR_LORA_ADDR
 			case 1 : {
-				Log.e("mLORA_addr", String.valueOf(data[2]));
+				int loraIndex = data[2];
 //				if(data[2]<mLoraItems.getValue().size()) {
-					StringBuffer addr = new StringBuffer();
-					for(int i=0; i<5; i++) {
-						int intVal = data[3+i] & 0xff;
-						if (intVal < 0x10) addr.append("0");
-						addr.append(Integer.toHexString(intVal));
-					}
-					mLoraItems.getValue().add(new LoraItem(addr.toString()));
-					Log.e("add lora addr", String.valueOf(data[2]));
+				StringBuffer addr = new StringBuffer();
+				for(int i=0; i<5; i++) {
+					int intVal = data[3+i] & 0xff;
+					if (intVal < 0x10) addr.append("0");
+					addr.append(Integer.toHexString(intVal));
+				}
+				mLoraItems.getValue().add(new LoraItem(addr.toString()));
+				Log.e("onCmdLora", "add addr[" + loraIndex + "] " + addr.toString());
 //				}
 				mLoraItems.postValue(mLoraItemsValues);
 			} break;
@@ -226,23 +252,46 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 			case 5 : {
 
 			} break;
-			default: break;
-		};
-
-		// CHAR_CMD_ARM
-			if (data[0] == 0) {
-				mArmState.postValue((int) data[1]);
+			default: {
+				Log.e("onCmdLora", "Unknown subCmd");
+				break;
 			}
-			// CHAR_CMD_LORA
-			else if (data[0] == 1) {
-				mLoraState.postValue(data);
-				Log.e("onDataReceivedPostData", "cmd = "+data[0]);
+		};
+	}
 
-			} else if (data[0] == 3) {
-				mStatusState.postValue( data);
+	void onCmdInfo(final byte[] data) {
+
+	}
+
+	@Override
+	public void onDataReceived(final byte[] data) {
+
+		if ( data.length < 1) return;
+
+		Log.e("onDataReceived", "cmd = " + data[0]);
+		int cmd    = data[0];
+		int subCmd = data[1];
+
+		switch(cmd) {
+			// CHAR_CMD_ARM
+			case 0 : {
+				onCmdArm(subCmd);
+				mArmState.postValue(subCmd);
+			} break;
+			// CHAR_CMD_LORA
+			case 1 : {
+				onCmdLora(subCmd, data);
+				//mLoraState.postValue(data);
+			} break;
+			// CHAR_CMD_INFO
+			case 3 : {
+				mStatusState.postValue(data);
+			} break;
+			default: {
+				Log.e("onDataReceived", "Unknown cmd");
+				break;
 			}
 		}
-		//mButtonState.postValue(state);
 
 	}
 
@@ -258,7 +307,7 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 
     @Override
     public void onSerialReceived(byte[] serial) {
-        mSerialNumber.setValue(serial);
+        mSerialNumber.postValue(serial);
     }
 
     @Override
@@ -288,14 +337,9 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 	}
 
 	@Override
-	public void onLinkLossOccurred(BluetoothDevice device) {
-
+	public void onLinklossOccur(final BluetoothDevice device) {
+		mIsConnected.postValue(false);
 	}
-
-	//@Override
-	//public void onLinklossOccur(final BluetoothDevice device) {
-	//	mIsConnected.postValue(false);
-	//}
 
 	@Override
 	public void onServicesDiscovered(final BluetoothDevice device, final boolean optionalServicesFound) {
@@ -331,11 +375,6 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 	}
 
 	@Override
-	public void onBondingFailed(BluetoothDevice device) {
-
-	}
-
-	@Override
 	public void onError(final BluetoothDevice device, final String message, final int errorCode) {
 		// TODO implement
 	}
@@ -343,32 +382,5 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 	@Override
 	public void onDeviceNotSupported(final BluetoothDevice device) {
 		// TODO implement
-	}
-
-//    public void addLora(byte[] addr) {
-//		final byte[] command = {1, 4, addr[0], addr[1], addr[2], addr[3], addr[4]};
-//		mBlinkyManager.write(command);
-//
-	//}
-public void getLora(int index) {
-	Log.e("write", "getLora "+index);
-	final byte[] command = {1, 3, (byte) index};
-	mBlinkyManager.write(command);
-}
-	public void addLora(byte[] addr) {
-		Log.e("write", "addLora "+addr[0]+" "+addr[1]+" "+addr[2]+" "+addr[3]+" "+addr[4]);
-		final byte[] command = {1, 4, addr[0], addr[1], addr[2], addr[3], addr[4]};
-		mBlinkyManager.write(command);
-	}
-	public void deleteLoraNum(int index) {
-		if(index>=0) {
-			final byte[] command = {1, 5, (byte) index};
-			mBlinkyManager.write(command);
-		}
-	}
-	public void deleteLora(byte[] addr) {
-		Log.e("write", "deleteLora "+addr[0]+" "+addr[1]+" "+addr[2]+" "+addr[3]+" "+addr[4]);
-		final byte[] command = {1, 5, addr[0], addr[1], addr[2], addr[3], addr[4]};
-		mBlinkyManager.write(command);
 	}
 }

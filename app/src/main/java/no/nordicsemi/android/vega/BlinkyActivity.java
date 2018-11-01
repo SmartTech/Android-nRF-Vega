@@ -33,6 +33,7 @@ package no.nordicsemi.android.vega;
 
 //import android.app.Fragment;
 //import android.app.FragmentTransaction;
+
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -42,7 +43,6 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.constraint.ConstraintLayout;
-//import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -60,12 +60,15 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 import no.nordicsemi.android.vega.adapter.ExtendedBluetoothDevice;
 import no.nordicsemi.android.vega.adapter.LoraAdapter;
 import no.nordicsemi.android.vega.utils.Utils;
 import no.nordicsemi.android.vega.viewmodels.BlinkyViewModel;
+
+//import android.support.v4.app.FragmentManager;
 
 public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.ClickLoraDialogListener, LoraParametersFragment.LoraDataListener {
 
@@ -196,11 +199,7 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 		viewModel.getConnectionState().observe(this, connectionState::setText);
 
 		viewModel.isConnected().observe(this, connected -> {
-			if (connected) {
-		//		viewModel.requestInfo();
-			} else {
-				finish();
-			}
+			if(!connected) finish();
 		});
 
 		viewModel.getArmState().observe(this, value -> {
@@ -214,7 +213,7 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 			}
 			// охрана установлена
 			else if(value==1) {
-				mp=MediaPlayer.create(getApplicationContext(),R.raw.arm);// the song is a filename which i have pasted inside a folder **raw** created under the **res** folder.//
+				mp=MediaPlayer.create(getApplicationContext(),R.raw.arm);
 				mp.start();
 				armContainer.setBackgroundColor(Color.GREEN);
 				armState.setText(R.string.arm_state_true);
@@ -224,7 +223,7 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 			}
 			// охрана снята
 			else if(value==3) {
-				mp=MediaPlayer.create(getApplicationContext(),R.raw.disarm);// the song is a filename which i have pasted inside a folder **raw** created under the **res** folder.//
+				mp=MediaPlayer.create(getApplicationContext(),R.raw.disarm);
 				mp.start();
 				armContainer.setBackgroundColor(Color.WHITE);
 				armState.setText(R.string.arm_state_false);
@@ -240,7 +239,7 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 			}
 			// тревога
 			else if(value==6) {
-				mp=MediaPlayer.create(getApplicationContext(),R.raw.alarm);// the song is a filename which i have pasted inside a folder **raw** created under the **res** folder.//
+				mp=MediaPlayer.create(getApplicationContext(),R.raw.alarm);
 				mp.start();
 				armContainer.setBackgroundColor(Color.RED);
 				armState.setText(R.string.arm_alarm);
@@ -315,9 +314,44 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 			};
 		});
 
-		viewModel.getStatusState().observe(this, value -> {
-
-		});
+        viewModel.getStatusState().observe(this, value -> {
+            Log.e("getStatusState", String.valueOf(value[1]));
+            byte data[] = new byte[]{value[2], value[3], value[4], value[5]};
+            // CHAR_CMD_INFO events
+            switch(value[1]) {
+                // CHAR_INFO_OID
+                case 0 : {
+                    int oid = ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN).getInt();
+                    TextView info_oid = findViewById(R.id.info_device_oid_value);
+                    info_oid.setText(String.valueOf(oid));
+                    Log.e("CHAR_INFO_OID", String.valueOf(oid));
+                } break;
+                // CHAR_INFO_BAT
+                case 1 : {
+                    int bat = ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN).getInt();
+                    TextView info_bat = findViewById(R.id.info_device_bat_value);
+                    info_bat.setText(String.valueOf(bat) + "%");
+                    Log.e("CHAR_INFO_BAT", String.valueOf(bat));
+                } break;
+                // CHAR_INFO_TEMP
+                case 2 : {
+                    float temp = ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN).getFloat();
+                    String str = String.format("%.01f", temp) + "°C";
+                    TextView info_temp = findViewById(R.id.info_device_temp_value);
+                    info_temp.setText(str);
+                    Log.e("CHAR_INFO_TEMP", str);
+                } break;
+                // CHAR_INFO_CURRENT
+                case 3 : {
+                    float current = ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN).getFloat();
+                    String str = String.format("%.02f", current) + "mAh";
+                    TextView info_state = findViewById(R.id.info_device_state_value);
+                    info_state.setText(str);
+                    Log.e("CHAR_INFO_CURRENT", str);
+                } break;
+                default: break;
+            };
+        });
 
 		viewModel.getLoraItems().observe(this, value -> {
 			loraAdapter.notifyDataSetChanged();

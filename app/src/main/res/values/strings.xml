@@ -39,6 +39,7 @@
     <string name="device_serial_number"><b>Серийный номер</b></string>
     <string name="device_temperature"><b>Температура</b></string>
     <string name="device_state"><b>Состояние:</b></string>
+    <string name="device_oid"><b>OID:</b></string>
     <string name="title_arm_control">Управление охраной</string>
     <string name="arm_state">Не активна</string>
     <string name="arm_button_prepare">Подготовка к охране</string>
