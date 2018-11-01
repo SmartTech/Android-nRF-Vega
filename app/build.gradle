@@ -25,7 +25,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             android.applicationVariants.all { variant ->
                 variant.outputs.all {
-                    outputFileName = "NRF_Vega_${defaultConfig.versionName}.apk"
+                    outputFileName = "VegaSeal_${defaultConfig.versionName}.apk"
                 }
             }
         }
