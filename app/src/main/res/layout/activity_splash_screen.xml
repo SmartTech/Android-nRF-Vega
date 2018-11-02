@@ -49,8 +49,8 @@
 		android:layout_gravity="center"
 		android:layout_marginTop="0dp"
 		android:scaleType="center"
-		android:scaleX="1.2"
-		android:scaleY="1.2"
-		android:src="@drawable/logo_v"/>
+		android:scaleX="1.4"
+		android:scaleY="1.4"
+		android:src="@drawable/glosav_logo_portrait"/>
 
 </RelativeLayout>

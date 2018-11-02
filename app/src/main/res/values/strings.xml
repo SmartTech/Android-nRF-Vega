@@ -29,37 +29,35 @@
   -->
 
 <resources>
-    <string name="app_name">VegaSeal</string>
-    <string name="feature_name">TEST</string>
+    <string name="app_name">GlosavES</string>
+    <string name="feature_name">VegaSeal</string>
 
     <string name="title">@string/app_name</string>
 
-    <string name="unknown_device">Unknown Device</string>
-    <string name="title_device_name">Информация</string>
+    <string name="title_arm_control">Управление охраной</string>
+    <string name="title_lora_manager">Менеджер LPWAN</string>
+
+    <string name="arm_check">проверка...</string>
+    <string name="arm_state_prepare">Ожидание троса...</string>
+    <string name="arm_button_prepare">Подготовка к охране</string>
+    <string name="arm_button_arm">Поставить на охрану</string>
+    <string name="arm_button_disarm">Снять с охраны</string>
+    <string name="arm_gamma_error">Ошибка модуля</string>
+    <string name="arm_state_true">Охрана активна</string>
+    <string name="arm_state_false">Охрана снята</string>
+    <string name="arm_state_unknown">неизвестно</string>
+    <string name="arm_state_timeout">Таймаут ожидания</string>
+    <string name="arm_alarm">ТРЕВОГА!</string>
+
     <string name="device_serial_number"><b>Серийный номер</b></string>
     <string name="device_temperature"><b>Температура</b></string>
     <string name="device_battery"><b>Заряд АКБ:</b></string>
     <string name="device_state"><b>Потребление:</b></string>
     <string name="device_oid"><b>OID:</b></string>
     <string name="device_is_sleep"><b>Состояние:</b></string>
-    <string name="title_arm_control">Управление охраной</string>
-    <string name="arm_state">Не активна</string>
-    <string name="arm_button_prepare">Подготовка к охране</string>
-    <string name="arm_button_arm">Поставить на охрану</string>
-    <string name="arm_button_disarm">Снять с охраны</string>
-    <string name="arm_gamma_error">Ошибка модуля</string>
-    <string name="arm_check">проверка...</string>
-    <string name="arm_state_unknown">неизвестно</string>
-    <string name="arm_state_true">Охрана активна</string>
-    <string name="arm_state_false">Охрана снята</string>
-    <string name="arm_state_prepare">Ожидание троса...</string>
-    <string name="arm_state_timeout">Таймаут ожидания</string>
-    <string name="arm_alarm">ТРЕВОГА!</string>
-    <string name="turn_on">On</string>
-    <string name="turn_off">Off</string>
-    <string name="title_led_state">LED</string>
-    <string name="title_lora_manager">Менеджер LoRa</string>
-    <string name="state">State</string>
+
+    <string name="unknown_device">Неизвестное уст-во</string>
+
     <string name="button_unknown">UNKNOWN</string>
     <string name="charge_percent">95%</string>
 

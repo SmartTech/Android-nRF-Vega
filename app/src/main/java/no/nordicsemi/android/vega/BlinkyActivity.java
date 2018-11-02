@@ -338,7 +338,8 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 		});
 
 		viewModel.getStatusBat().observe(this, value -> {
-			TextView info_bat = findViewById(R.id.info_device_bat_value);
+			//TextView info_bat = findViewById(R.id.info_device_bat_value);
+			TextView info_bat = findViewById(R.id.battery);
 			info_bat.setText(String.valueOf(value) + "%");
 		});
 

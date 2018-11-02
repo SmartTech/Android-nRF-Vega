@@ -30,6 +30,7 @@
 
 package no.nordicsemi.android.vega.adapter;
 
+import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -109,6 +110,13 @@ public class DevicesAdapter extends RecyclerView.Adapter<DevicesAdapter.ViewHold
 		return getItemCount() == 0;
 	}
 
+
+	public void onBatteryValueReceived(final BluetoothDevice device) {
+		final int position = mDevices.indexOf(device);
+		if (position >= 0)
+			notifyItemChanged(position);
+	}
+
 	final class ViewHolder extends RecyclerView.ViewHolder {
 		@BindView(R.id.device_address) TextView deviceAddress;
 		@BindView(R.id.device_data) TextView deviceData;
@@ -117,6 +125,7 @@ public class DevicesAdapter extends RecyclerView.Adapter<DevicesAdapter.ViewHold
 
 		private ViewHolder(final View view) {
 			super(view);
+
 			ButterKnife.bind(this, view);
 
 			view.findViewById(R.id.device_container).setOnClickListener(v -> {

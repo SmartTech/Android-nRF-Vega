@@ -316,7 +316,7 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 					// CHAR_INFO_BAT
 					case 1 : {
 						int bat = ByteBuffer.wrap(valdata).order(ByteOrder.LITTLE_ENDIAN).getInt();
-						mStatusBat.postValue(bat);
+						//mStatusBat.postValue(bat);
 						Log.e("CHAR_INFO_BAT", String.valueOf(bat));
 					} break;
 					// CHAR_INFO_TEMP
@@ -408,13 +408,13 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 
 	@Override
 	public boolean shouldEnableBatteryLevelNotifications(final BluetoothDevice device) {
-		// Blinky doesn't have Battery Service
-		return false;
+		return true;
 	}
 
 	@Override
 	public void onBatteryValueReceived(final BluetoothDevice device, final int value) {
-		// Blinky doesn't have Battery Service
+		Log.e("Test", "Battery = " + value);
+        mStatusBat.postValue(value);
 	}
 
 	@Override
