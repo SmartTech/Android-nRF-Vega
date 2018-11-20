@@ -48,6 +48,7 @@
     <string name="arm_state_unknown">неизвестно</string>
     <string name="arm_state_timeout">Таймаут ожидания</string>
     <string name="arm_alarm">ТРЕВОГА!</string>
+    <string name="arm_alert">Предупреждение!</string>
 
     <string name="device_serial_number"><b>Серийный номер</b></string>
     <string name="device_temperature"><b>Температура</b></string>

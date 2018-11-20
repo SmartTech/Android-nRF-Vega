@@ -250,6 +250,15 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 				armControlBtn.setText(R.string.arm_button_disarm);
 				armStateFlag = 2;
 			}
+			// предупреждение
+			else if(value==7) {
+				mp=MediaPlayer.create(getApplicationContext(),R.raw.alert);
+				mp.start();
+				armContainer.setBackgroundColor(0xffFFAE19);
+				armState.setText(R.string.arm_alert);
+				armControlBtn.setText(R.string.arm_button_disarm);
+				armStateFlag = 1;
+			}
 			else {
 				armContainer.setBackgroundColor(Color.WHITE);
 				armState.setText(R.string.arm_state_unknown);
