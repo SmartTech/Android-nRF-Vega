@@ -88,4 +88,12 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Address (5 byte hex):</string>
+    <string name="gps_latitute">Широта</string>
+    <string name="gps_longitude">Долгота</string>
+    <string name="gps_altitude">Высота</string>
+    <string name="gps_speed">Скорость</string>
+    <string name="gps_satelites">Спутников</string>
+    <string name="gsm_registered">Регистрация сети</string>
+    <string name="gsm_ready">Готовность модема</string>
+    <string name="gps_fix_time">Время</string>
 </resources>

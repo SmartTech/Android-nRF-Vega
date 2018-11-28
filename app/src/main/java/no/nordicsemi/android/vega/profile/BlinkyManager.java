@@ -178,7 +178,6 @@ public class BlinkyManager extends BleManager<BlinkyManagerCallbacks> {
 			}  else if (characteristic == mSerialCharacteristic) {
 				Log.e("TEST", "characteristic == mSerialCharacteristic");
 				mCallbacks.onSerialReceived(data);
-
 			}
 		}
 

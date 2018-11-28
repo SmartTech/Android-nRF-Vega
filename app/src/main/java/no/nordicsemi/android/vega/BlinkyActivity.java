@@ -93,6 +93,7 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 	ProgressBar armProgressBar;
 	TextView armState;
 	TextView mSerial;
+	TextView mVersion;
 	TextView mTempValue;
 
 	ConstraintLayout armContainer;
@@ -103,6 +104,8 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 	boolean state = false;
 
 	int armStateFlag = 0;
+
+	boolean skipedFirstArm = true;
 
 //	int loraCount = 0;
 
@@ -183,10 +186,15 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 		final TextView connectionState = findViewById(R.id.connection_state);
 		final View content = findViewById(R.id.device_container);
 
-		mSerial = findViewById(R.id.info_device_serial_value);
+		mSerial  = findViewById(R.id.info_device_serial_value);
+		mVersion = findViewById(R.id.info_device_version_value);
 
 		viewModel.getSerialNumber().observe(this, serial -> {
 			mSerial.setText(Utils.byteArrayToHexString(serial));
+		});
+
+		viewModel.getVersionNumber().observe(this, version -> {
+			mVersion.setText(version);
 		});
 
 		//mTempValue = findViewById(R.id.info_device_temp_value);
@@ -207,13 +215,17 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 		});
 
 		viewModel.getArmState().observe(this, value -> {
+			Log.e("getArmState", "value = " + value);
 			// ожидание троса
 			if(value==0) {
-				armContainer.setBackgroundColor(Color.CYAN);
-				armState.setText(R.string.arm_state_prepare);
-				armControlBtn.setText(R.string.arm_button_arm);
-				armStateFlag = 1;
-				armBuilder.show();
+				if(skipedFirstArm) skipedFirstArm = false;
+				else {
+					armContainer.setBackgroundColor(Color.CYAN);
+					armState.setText(R.string.arm_state_prepare);
+					armControlBtn.setText(R.string.arm_button_arm);
+					armStateFlag = 1;
+					armBuilder.show();
+				}
 			}
 			// охрана установлена
 			else if(value==1) {
@@ -268,6 +280,50 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 			}
 			armControlBtn.setEnabled(true);
 			armProgressBar.setVisibility(View.GONE);
+		});
+
+		viewModel.getGpsLat().observe(this, value -> {
+			TextView text = findViewById(R.id.gps_latitute_value);
+			text.setText(String.valueOf(value));
+		});
+
+		viewModel.getGpsLon().observe(this, value -> {
+			TextView text = findViewById(R.id.gps_longitude_value);
+			text.setText(String.valueOf(value));
+		});
+
+		viewModel.getGpsAlt().observe(this, value -> {
+			TextView text = findViewById(R.id.gps_altitude_value);
+			text.setText(String.valueOf(value));
+		});
+
+		viewModel.getGpsSpd().observe(this, value -> {
+			TextView text = findViewById(R.id.gps_speed_value);
+			text.setText(String.valueOf(value));
+		});
+
+		viewModel.getGpsSat().observe(this, value -> {
+			TextView text = findViewById(R.id.gps_satelites_value);
+			text.setText(String.valueOf(value));
+		});
+
+		viewModel.getGpsTime().observe(this, value -> {
+			TextView text = findViewById(R.id.gps_fix_time_value);
+			text.setText(String.valueOf(value));
+		});
+
+		viewModel.getGsmReady().observe(this, value -> {
+			TextView text = findViewById(R.id.gsm_ready_value);
+			text.setText((value>0)?"Готов":"Откл.");
+		});
+
+		viewModel.getGsmRegistered().observe(this, value -> {
+			TextView text = findViewById(R.id.gsm_registered_value);
+			     if(value==0) text.setText("Нет сети");
+			else if(value==1) text.setText("ОК");
+			else if(value==2) text.setText("Регистрация...");
+			else if(value==3) text.setText("Отказано!");
+			else text.setText("Ошибка");
 		});
 
 		viewModel.getLoraState().observe(this, value -> {

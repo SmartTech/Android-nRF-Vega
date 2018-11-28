@@ -65,7 +65,9 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 	// Flag that holds the on off state of the LED. On is true, Off is False
 	private final MutableLiveData<Boolean> mLEDState = new MutableLiveData<>();
 	private final MutableLiveData<Integer> mArmState = new MutableLiveData<>();
+	private final MutableLiveData<Integer> mGSM = new MutableLiveData<>();
     private final MutableLiveData<byte[]> mSerialNumber = new MutableLiveData<>();
+	private final MutableLiveData<String> mVersionNumber = new MutableLiveData<>();
     private final MutableLiveData<Integer> mTemperature = new MutableLiveData<>();
 	private final MutableLiveData<byte[]> mLoraState = new MutableLiveData<>();
 	private final MutableLiveData<Integer> mWakeState = new MutableLiveData<>();
@@ -78,6 +80,16 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 	private final ArrayList<LoraItem> mLoraItemsValues = new ArrayList<LoraItem>();
     private final MutableLiveData<ArrayList<LoraItem>> mLoraItems = new MutableLiveData<>();
 //	private int mLoraCount = 0;
+
+	private final MutableLiveData<Float> mGpsLat = new MutableLiveData<>();
+	private final MutableLiveData<Float> mGpsLon = new MutableLiveData<>();
+	private final MutableLiveData<Float> mGpsAlt = new MutableLiveData<>();
+	private final MutableLiveData<Float> mGpsSpd = new MutableLiveData<>();
+	private final MutableLiveData<Integer> mGpsSat = new MutableLiveData<>();
+	private final MutableLiveData<Integer> mGpsTime = new MutableLiveData<>();
+
+	private final MutableLiveData<Integer> mGsmReady = new MutableLiveData<>();
+	private final MutableLiveData<Integer> mGsmRegistered = new MutableLiveData<>();
 
 	// Flag that holds the pressed released state of the button on the devkit. Pressed is true, Released is False
 	private final MutableLiveData<Boolean> mButtonState = new MutableLiveData<>();
@@ -110,6 +122,17 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 	public LiveData<Integer> getArmState() {
 		return mArmState;
 	}
+
+	public LiveData<Float> getGpsLat() { return mGpsLat; }
+	public LiveData<Float> getGpsLon() { return mGpsLon; }
+	public LiveData<Float> getGpsAlt() { return mGpsAlt; }
+	public LiveData<Float> getGpsSpd() { return mGpsSpd; }
+	public LiveData<Integer> getGpsSat() { return mGpsSat; }
+	public LiveData<Integer> getGpsTime() { return mGpsTime; }
+
+	public LiveData<Integer> getGsmReady() { return mGsmReady; }
+	public LiveData<Integer> getGsmRegistered() { return mGsmRegistered; }
+
 	public MutableLiveData<byte[]> getLoraState() {
 		return mLoraState;
 	}
@@ -121,6 +144,10 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
     public LiveData<byte[]> getSerialNumber() {
         return mSerialNumber;
     }
+
+	public LiveData<String> getVersionNumber() {
+		return mVersionNumber;
+	}
 
     public LiveData<Integer> getTemperature() {
         return mTemperature;
@@ -166,6 +193,21 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 		mBlinkyManager.write(command);
 		Log.e("ble", "requestInfo " );
 	}
+
+	// Запрос информации o GPS
+	public void requestGPS() {
+		final byte[] command = {6};
+		mBlinkyManager.write(command);
+		Log.e("ble", "requestGPS " );
+	}
+
+	// Запрос информации o GSM
+	public void requestGSM() {
+		final byte[] command = {7};
+		mBlinkyManager.write(command);
+		Log.e("ble", "requestGSM " );
+	}
+
 	// Подготовка к охране
 	public void prearm() {
         final byte[] command = {0, 0};
@@ -230,6 +272,88 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 		}
 	}
 
+	void onCmdGPS(int subCmd, final byte[] data) {
+
+		byte valdata[] = new byte[]{data[2], data[3], data[4], data[5]};
+
+		//
+		switch(subCmd) {
+			// CHAR_GPS_LAT
+			case 0: {
+				float value = ByteBuffer.wrap(valdata).order(ByteOrder.LITTLE_ENDIAN).getFloat();
+				mGpsLat.postValue(value);
+				String str = String.format("%.01f", value) + "°";
+				Log.e("CHAR_GPS_LAT", str);
+			}
+			break;
+			// CHAR_GPS_LON
+			case 1: {
+				float value = ByteBuffer.wrap(valdata).order(ByteOrder.LITTLE_ENDIAN).getFloat();
+				mGpsLon.postValue(value);
+				String str = String.format("%.01f", value) + "°";
+				Log.e("CHAR_GPS_LON", str);
+			}
+			break;
+			// CHAR_GPS_ALT
+			case 2: {
+				float value = ByteBuffer.wrap(valdata).order(ByteOrder.LITTLE_ENDIAN).getFloat();
+				mGpsAlt.postValue(value);
+				String str = String.format("%.01f", value) + "°";
+				Log.e("CHAR_GPS_ALT", str);
+			}
+			break;
+			// CHAR_GPS_SPD
+			case 3: {
+				float value = ByteBuffer.wrap(valdata).order(ByteOrder.LITTLE_ENDIAN).getFloat();
+				mGpsSpd.postValue(value);
+				String str = String.format("%.01f", value) + "°";
+				Log.e("CHAR_GPS_SPD", str);
+			}
+			break;
+			// CHAR_GPS_SAT
+			case 4: {
+				int value = ByteBuffer.wrap(valdata).order(ByteOrder.LITTLE_ENDIAN).getInt();
+				mGpsSat.postValue(value);
+				Log.e("CHAR_GPS_SAT", String.valueOf(value));
+			}
+			break;
+			// CHAR_GPS_UTC
+			case 5: {
+				int value = ByteBuffer.wrap(valdata).order(ByteOrder.LITTLE_ENDIAN).getInt();
+				mGpsTime.postValue(value);
+				Log.e("CHAR_GPS_UTC", String.valueOf(value));
+			}
+			break;
+			default:
+				break;
+		}
+	}
+
+	void onCmdGSM(int subCmd, final byte[] data) {
+
+		byte valdata[] = new byte[]{data[2], data[3], data[4], data[5]};
+
+		//
+		switch(subCmd) {
+			// CHAR_GSM_READY
+			case 0: {
+				int value = ByteBuffer.wrap(valdata).order(ByteOrder.LITTLE_ENDIAN).getInt();
+				mGsmReady.postValue(value);
+				Log.e("CHAR_GSM_READY", String.valueOf(value));
+			}
+			break;
+			// CHAR_GSM_REGISTERED
+			case 1: {
+				int value = ByteBuffer.wrap(valdata).order(ByteOrder.LITTLE_ENDIAN).getInt();
+				mGsmRegistered.postValue(value);
+				Log.e("CHAR_GSM_REGISTERED", String.valueOf(value));
+			}
+			break;
+			default:
+				break;
+		}
+	}
+
 	void onCmdLora(int subCmd, final byte[] data) {
 		Log.e("onCmdLora", "subCmd = " + subCmd);
 		switch(subCmd) {
@@ -285,7 +409,7 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 	@Override
 	public void onDataReceived(final byte[] data) {
 
-		if ( data.length < 1) return;
+		if ( data.length < 2) return;
 
 		Log.e("onDataReceived", "cmd = " + data[0]);
 		int cmd    = data[0];
@@ -294,7 +418,7 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 		switch(cmd) {
 			// CHAR_CMD_ARM
 			case 0 : {
-				onCmdArm(subCmd);
+				//onCmdArm(subCmd);
 				mArmState.postValue(subCmd);
 			} break;
 			// CHAR_CMD_LORA
@@ -340,6 +464,14 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 			case 5 : {
 				mWakeState.postValue(subCmd);
 			} break;
+			// CHAR_CMD_GPS
+			case 6 : {
+				onCmdGPS(subCmd, data);
+			} break;
+			// CHAR_CMD_GSM
+			case 7 : {
+				onCmdGSM(subCmd, data);
+			} break;
 				default: {
 				Log.e("onDataReceived", "Unknown cmd");
 				break;
@@ -355,7 +487,7 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 
     @Override
     public void onRevisionReceived(String revision) {
-
+		mVersionNumber.postValue(revision);
     }
 
     @Override

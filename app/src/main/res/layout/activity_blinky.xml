@@ -49,12 +49,23 @@
 			android:background="?attr/colorPrimary"
 			app:popupTheme="@style/AppTheme.PopupOverlay" >
 
+
+			<TextView
+				android:id="@+id/info_device_version_value"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginLeft="50dp"
+				android:text="v.3.xx"
+				android:textColor="#FFFFFF"
+				android:textStyle="bold"
+				android:textSize="15sp"/>
+
 			<TextView
 				android:id="@+id/battery"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:layout_alignParentLeft="true"
-				android:layout_marginLeft="50dp"
+				android:layout_marginLeft="5dp"
 				android:layout_marginTop="8dp"
 				android:background="@drawable/battery"
 				android:freezesText="true"
@@ -140,7 +151,6 @@
 				</android.support.constraint.ConstraintLayout>
 			</android.support.v7.widget.CardView>
 
-
 			<android.support.v7.widget.CardView
 				android:id="@+id/info_card"
 				android:layout_width="match_parent"
@@ -158,8 +168,9 @@
 						android:id="@+id/info_device_serial"
 						android:layout_width="150dp"
 						android:layout_height="wrap_content"
-						android:layout_marginEnd="8dp"
-						android:padding="5dp"
+						android:layout_marginEnd="10dp"
+						android:layout_marginStart="10dp"
+						android:padding="1dp"
 						android:text="@string/device_serial_number"
 						app:layout_constraintLeft_toLeftOf="parent"
 						app:layout_constraintTop_toBottomOf="parent" />
@@ -169,7 +180,7 @@
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:gravity="right"
-						android:padding="5dp"
+						android:padding="1dp"
 						android:text="value"
 						app:layout_constraintEnd_toEndOf="parent"
 						app:layout_constraintStart_toEndOf="@+id/info_device_serial"
@@ -179,8 +190,9 @@
 						android:id="@+id/info_device_temp"
 						android:layout_width="150dp"
 						android:layout_height="wrap_content"
-						android:layout_marginEnd="8dp"
-						android:padding="5dp"
+						android:layout_marginEnd="10dp"
+						android:layout_marginStart="10dp"
+						android:padding="1dp"
 						android:text="@string/device_temperature"
 						app:layout_constraintLeft_toLeftOf="parent"
 						app:layout_constraintTop_toBottomOf="@+id/info_device_serial" />
@@ -189,9 +201,9 @@
 						android:id="@+id/info_device_temp_value"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
-						android:layout_marginEnd="8dp"
-						android:layout_marginStart="8dp"
-						android:padding="5dp"
+						android:layout_marginEnd="10dp"
+						android:layout_marginStart="10dp"
+						android:padding="1dp"
 						android:text="value"
 						android:gravity="right"
 						app:layout_constraintEnd_toEndOf="parent"
@@ -202,8 +214,9 @@
 						android:id="@+id/info_device_bat"
 						android:layout_width="150dp"
 						android:layout_height="wrap_content"
-						android:layout_marginEnd="8dp"
-						android:padding="5dp"
+						android:layout_marginEnd="10dp"
+						android:layout_marginStart="10dp"
+						android:padding="1dp"
 						android:text="@string/device_battery"
 						android:visibility="gone"
 						app:layout_constraintLeft_toLeftOf="parent"
@@ -213,9 +226,9 @@
 						android:id="@+id/info_device_bat_value"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
-						android:layout_marginEnd="8dp"
-						android:layout_marginStart="8dp"
-						android:padding="5dp"
+						android:layout_marginEnd="10dp"
+						android:layout_marginStart="10dp"
+						android:padding="1dp"
 						android:text="value"
 						android:gravity="right"
 						android:visibility="gone"
@@ -227,8 +240,9 @@
 						android:id="@+id/info_device_state"
 						android:layout_width="150dp"
 						android:layout_height="wrap_content"
-						android:layout_marginEnd="8dp"
-						android:padding="5dp"
+						android:layout_marginEnd="10dp"
+						android:layout_marginStart="10dp"
+						android:padding="1dp"
 						android:text="@string/device_state"
 						app:layout_constraintLeft_toLeftOf="parent"
 						app:layout_constraintTop_toBottomOf="@+id/info_device_bat" />
@@ -237,9 +251,9 @@
 						android:id="@+id/info_device_state_value"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
-						android:layout_marginEnd="8dp"
-						android:layout_marginStart="8dp"
-						android:padding="5dp"
+						android:layout_marginEnd="10dp"
+						android:layout_marginStart="10dp"
+						android:padding="1dp"
 						android:text="value"
 						android:gravity="right"
 						app:layout_constraintEnd_toEndOf="parent"
@@ -250,8 +264,9 @@
 						android:id="@+id/info_device_oid"
 						android:layout_width="150dp"
 						android:layout_height="wrap_content"
-						android:layout_marginEnd="8dp"
-						android:padding="5dp"
+						android:layout_marginEnd="10dp"
+						android:layout_marginStart="10dp"
+						android:padding="1dp"
 						android:text="@string/device_oid"
 						app:layout_constraintLeft_toLeftOf="parent"
 						app:layout_constraintTop_toBottomOf="@+id/info_device_state" />
@@ -260,9 +275,9 @@
 						android:id="@+id/info_device_oid_value"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
-						android:layout_marginStart="8dp"
-						android:layout_marginEnd="8dp"
-						android:padding="5dp"
+						android:layout_marginStart="10dp"
+						android:layout_marginEnd="10dp"
+						android:padding="1dp"
 						android:text="value"
 						android:gravity="right"
 						app:layout_constraintEnd_toEndOf="parent"
@@ -273,8 +288,9 @@
 						android:id="@+id/info_device_sleep"
 						android:layout_width="150dp"
 						android:layout_height="wrap_content"
-						android:layout_marginEnd="8dp"
-						android:padding="5dp"
+						android:layout_marginEnd="10dp"
+						android:layout_marginStart="10dp"
+						android:padding="1dp"
 						android:text="@string/device_is_sleep"
 						app:layout_constraintLeft_toLeftOf="parent"
 						app:layout_constraintTop_toBottomOf="@+id/info_device_oid_value" />
@@ -283,7 +299,9 @@
 						android:id="@+id/button_wake"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
-						android:layout_marginStart="8dp"
+						android:layout_marginEnd="10dp"
+						android:layout_marginStart="10dp"
+						android:padding="1dp"
 						android:text="Пробудить"
 						android:visibility="gone"
 						app:layout_constraintEnd_toEndOf="@+id/info_device_sleep_value"
@@ -294,14 +312,238 @@
 						android:id="@+id/info_device_sleep_value"
 						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
-						android:layout_marginStart="8dp"
-						android:layout_marginEnd="8dp"
-						android:padding="5dp"
+						android:layout_marginStart="10dp"
+						android:layout_marginEnd="10dp"
+						android:padding="1dp"
 						android:text="value"
 						android:gravity="right"
 						app:layout_constraintEnd_toEndOf="parent"
 						app:layout_constraintStart_toEndOf="@+id/info_device_oid_value"
 						app:layout_constraintTop_toBottomOf="@+id/info_device_oid_value" />
+
+				</android.support.constraint.ConstraintLayout>
+			</android.support.v7.widget.CardView>
+
+			<android.support.v7.widget.CardView
+				android:id="@+id/info_gsm"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="5dp"
+				android:background="@android:color/white"
+				app:cardElevation="1dp">
+
+				<android.support.constraint.ConstraintLayout
+					android:id="@+id/gsm_container"
+					android:layout_width="match_parent"
+					android:layout_height="match_parent">
+
+					<TextView
+						android:id="@+id/gsm_ready"
+						android:layout_width="150dp"
+						android:layout_height="wrap_content"
+						android:layout_marginEnd="10dp"
+						android:layout_marginStart="10dp"
+						android:padding="1dp"
+						android:text="@string/gsm_ready"
+						app:layout_constraintLeft_toLeftOf="parent"
+						app:layout_constraintTop_toBottomOf="parent" />
+
+					<TextView
+						android:id="@+id/gsm_ready_value"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:layout_marginEnd="10dp"
+						android:layout_marginStart="10dp"
+						android:gravity="right"
+						android:padding="1dp"
+						android:text="value"
+						app:layout_constraintEnd_toEndOf="parent"
+						app:layout_constraintStart_toEndOf="@+id/gsm_ready"
+						app:layout_constraintTop_toTopOf="@+id/gsm_ready" />
+
+					<TextView
+						android:id="@+id/gsm_registered"
+						android:layout_width="150dp"
+						android:layout_height="wrap_content"
+						android:layout_marginEnd="10dp"
+						android:layout_marginStart="10dp"
+						android:padding="1dp"
+						android:text="@string/gsm_registered"
+						app:layout_constraintLeft_toLeftOf="parent"
+						app:layout_constraintTop_toBottomOf="@+id/gsm_ready" />
+
+					<TextView
+						android:id="@+id/gsm_registered_value"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:layout_marginEnd="10dp"
+						android:layout_marginStart="10dp"
+						android:padding="1dp"
+						android:text="value"
+						android:gravity="right"
+						app:layout_constraintEnd_toEndOf="parent"
+						app:layout_constraintStart_toEndOf="@+id/gsm_registered"
+						app:layout_constraintTop_toBottomOf="@+id/gsm_ready" />
+
+				</android.support.constraint.ConstraintLayout>
+			</android.support.v7.widget.CardView>
+
+			<android.support.v7.widget.CardView
+				android:id="@+id/info_gps"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="5dp"
+				android:background="@android:color/white"
+				app:cardElevation="1dp">
+
+				<android.support.constraint.ConstraintLayout
+					android:id="@+id/gps_container"
+					android:layout_width="match_parent"
+					android:layout_height="match_parent">
+
+					<TextView
+						android:id="@+id/gps_latitute"
+						android:layout_width="150dp"
+						android:layout_height="wrap_content"
+						android:layout_marginEnd="10dp"
+						android:layout_marginStart="10dp"
+						android:padding="1dp"
+						android:text="@string/gps_latitute"
+						app:layout_constraintLeft_toLeftOf="parent"
+						app:layout_constraintTop_toBottomOf="parent" />
+
+					<TextView
+						android:id="@+id/gps_latitute_value"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:layout_marginEnd="10dp"
+						android:layout_marginStart="10dp"
+						android:gravity="right"
+						android:padding="1dp"
+						android:text="value"
+						app:layout_constraintEnd_toEndOf="parent"
+						app:layout_constraintStart_toEndOf="@+id/gps_latitute"
+						app:layout_constraintTop_toTopOf="@+id/gps_latitute" />
+
+					<TextView
+						android:id="@+id/gps_longitude"
+						android:layout_width="150dp"
+						android:layout_height="wrap_content"
+						android:layout_marginEnd="10dp"
+						android:layout_marginStart="10dp"
+						android:padding="1dp"
+						android:text="@string/gps_longitude"
+						app:layout_constraintLeft_toLeftOf="parent"
+						app:layout_constraintTop_toBottomOf="@+id/gps_latitute" />
+
+					<TextView
+						android:id="@+id/gps_longitude_value"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:layout_marginEnd="10dp"
+						android:layout_marginStart="10dp"
+						android:padding="1dp"
+						android:text="value"
+						android:gravity="right"
+						app:layout_constraintEnd_toEndOf="parent"
+						app:layout_constraintStart_toEndOf="@+id/gps_longitude"
+						app:layout_constraintTop_toBottomOf="@+id/gps_latitute" />
+
+					<TextView
+						android:id="@+id/gps_altitude"
+						android:layout_width="150dp"
+						android:layout_height="wrap_content"
+						android:layout_marginEnd="10dp"
+						android:layout_marginStart="10dp"
+						android:padding="1dp"
+						android:text="@string/gps_altitude"
+						app:layout_constraintLeft_toLeftOf="parent"
+						app:layout_constraintTop_toBottomOf="@+id/gps_longitude" />
+
+					<TextView
+						android:id="@+id/gps_altitude_value"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:layout_marginEnd="10dp"
+						android:layout_marginStart="10dp"
+						android:padding="1dp"
+						android:text="value"
+						android:gravity="right"
+						app:layout_constraintEnd_toEndOf="parent"
+						app:layout_constraintStart_toEndOf="@+id/gps_altitude"
+						app:layout_constraintTop_toBottomOf="@+id/gps_longitude" />
+
+					<TextView
+						android:id="@+id/gps_speed"
+						android:layout_width="150dp"
+						android:layout_height="wrap_content"
+						android:layout_marginEnd="10dp"
+						android:layout_marginStart="10dp"
+						android:padding="1dp"
+						android:text="@string/gps_speed"
+						app:layout_constraintLeft_toLeftOf="parent"
+						app:layout_constraintTop_toBottomOf="@+id/gps_altitude" />
+
+					<TextView
+						android:id="@+id/gps_speed_value"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:layout_marginEnd="10dp"
+						android:layout_marginStart="10dp"
+						android:padding="1dp"
+						android:text="value"
+						android:gravity="right"
+						app:layout_constraintEnd_toEndOf="parent"
+						app:layout_constraintStart_toEndOf="@+id/gps_speed"
+						app:layout_constraintTop_toBottomOf="@+id/gps_altitude" />
+
+					<TextView
+						android:id="@+id/gps_satelites"
+						android:layout_width="150dp"
+						android:layout_height="wrap_content"
+						android:layout_marginEnd="10dp"
+						android:layout_marginStart="10dp"
+						android:padding="1dp"
+						android:text="@string/gps_satelites"
+						app:layout_constraintLeft_toLeftOf="parent"
+						app:layout_constraintTop_toBottomOf="@+id/gps_speed" />
+
+					<TextView
+						android:id="@+id/gps_satelites_value"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:layout_marginEnd="10dp"
+						android:layout_marginStart="10dp"
+						android:padding="1dp"
+						android:text="value"
+						android:gravity="right"
+						app:layout_constraintEnd_toEndOf="parent"
+						app:layout_constraintStart_toEndOf="@+id/gps_satelites"
+						app:layout_constraintTop_toBottomOf="@+id/gps_speed" />
+
+					<TextView
+						android:id="@+id/gps_fix_time"
+						android:layout_width="150dp"
+						android:layout_height="wrap_content"
+						android:layout_marginEnd="10dp"
+						android:layout_marginStart="10dp"
+						android:padding="1dp"
+						android:text="@string/gps_fix_time"
+						app:layout_constraintLeft_toLeftOf="parent"
+						app:layout_constraintTop_toBottomOf="@+id/gps_satelites" />
+
+					<TextView
+						android:id="@+id/gps_fix_time_value"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:layout_marginEnd="10dp"
+						android:layout_marginStart="10dp"
+						android:padding="1dp"
+						android:text="value"
+						android:gravity="right"
+						app:layout_constraintEnd_toEndOf="parent"
+						app:layout_constraintStart_toEndOf="@+id/gps_fix_time"
+						app:layout_constraintTop_toBottomOf="@+id/gps_satelites" />
 
 				</android.support.constraint.ConstraintLayout>
 			</android.support.v7.widget.CardView>
