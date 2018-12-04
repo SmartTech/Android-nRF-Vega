@@ -327,7 +327,6 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 		});
 
 		viewModel.getLoraState().observe(this, value -> {
-			// CHAR_CMD_LORA events
             Log.e("Observed lora state", String.valueOf(value[1]) );
 			// CHAR_CMD_LORA events
 			switch(value[1]) {

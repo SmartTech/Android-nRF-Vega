@@ -140,6 +140,8 @@ public class LoraParametersFragment extends DialogFragment {
         //       }
         //data[2]
 
+        if(data[2] != mIndex) return;
+
         TextView lora_battery = mParametersView.findViewById(R.id.lora_battery);
         TextView lora_rssi    = mParametersView.findViewById(R.id.lora_rssi);
         TextView lora_hall1   = mParametersView.findViewById(R.id.lora_hall1);
