@@ -385,6 +385,16 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
             };
         });
 */
+		viewModel.getChargeState().observe(this, value -> {
+			TextView charge_state = findViewById(R.id.charge_status_text);
+			switch(value) {
+				case 0 : charge_state.setText("Отключена");  break;
+				case 1 : charge_state.setText("Подключена"); break;
+				case 2 : charge_state.setText("Заряжается"); break;
+				case 3 : charge_state.setText("Завершена");  break;
+				default: charge_state.setText("Неизвестно"); break;
+			}
+		});
 
         viewModel.getWakeState().observe(this, value -> {
             TextView sleep_state = findViewById(R.id.info_device_sleep_value);
@@ -396,6 +406,7 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
                 wakeBtn.setVisibility(View.VISIBLE);
             }
         });
+
 		viewModel.getStatusOID().observe(this, value -> {
 			TextView info_oid = findViewById(R.id.info_device_oid_value);
 			info_oid.setText(String.valueOf(value));

@@ -71,6 +71,7 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
     private final MutableLiveData<Integer> mTemperature = new MutableLiveData<>();
 	private final MutableLiveData<byte[]> mLoraState = new MutableLiveData<>();
 	private final MutableLiveData<Integer> mWakeState = new MutableLiveData<>();
+	private final MutableLiveData<Integer> mChargeState = new MutableLiveData<>();
 	//private final MutableLiveData<byte[]> mStatusState = new MutableLiveData<>();
 	private final MutableLiveData<Integer> mStatusOID = new MutableLiveData<>();
 	private final MutableLiveData<Float> mStatusTemp = new MutableLiveData<>();
@@ -137,6 +138,7 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 		return mLoraState;
 	}
 	public MutableLiveData<Integer> getWakeState() { return mWakeState;	}
+	public MutableLiveData<Integer> getChargeState() { return mChargeState;	}
 //	public LiveData<byte[]> getStatusState() {
 //		return mStatusState;
 //	}
@@ -476,6 +478,10 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 				Log.e("onDataReceived", "Unknown cmd");
 				break;
 			}
+			// CHAR_CMD_CHARGE
+			case 8 : {
+				mChargeState.postValue(subCmd);
+			} break;
 		}
 
 	}

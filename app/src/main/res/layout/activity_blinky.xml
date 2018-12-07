@@ -152,6 +152,46 @@
 			</android.support.v7.widget.CardView>
 
 			<android.support.v7.widget.CardView
+				android:id="@+id/info_charge"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="5dp"
+				android:background="@android:color/white"
+				app:cardElevation="1dp">
+
+			<android.support.constraint.ConstraintLayout
+				android:id="@+id/charge_container"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent">
+
+				<TextView
+					android:id="@+id/charge_status"
+					android:layout_width="150dp"
+					android:layout_height="wrap_content"
+					android:layout_marginEnd="10dp"
+					android:layout_marginStart="10dp"
+					android:padding="1dp"
+					android:text="@string/charge_status"
+					app:layout_constraintLeft_toLeftOf="parent"
+					app:layout_constraintTop_toBottomOf="parent" />
+
+				<TextView
+					android:id="@+id/charge_status_text"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_marginEnd="10dp"
+					android:layout_marginStart="10dp"
+					android:gravity="right"
+					android:padding="1dp"
+					android:text="value"
+					app:layout_constraintEnd_toEndOf="parent"
+					app:layout_constraintStart_toEndOf="@+id/charge_status"
+					app:layout_constraintTop_toTopOf="@+id/charge_status" />
+
+			</android.support.constraint.ConstraintLayout>
+			</android.support.v7.widget.CardView>
+
+			<android.support.v7.widget.CardView
 				android:id="@+id/info_card"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
