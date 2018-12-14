@@ -72,6 +72,7 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 	private final MutableLiveData<byte[]> mLoraState = new MutableLiveData<>();
 	private final MutableLiveData<Integer> mWakeState = new MutableLiveData<>();
 	private final MutableLiveData<Integer> mChargeState = new MutableLiveData<>();
+    private final MutableLiveData<Integer> mBootCauseState = new MutableLiveData<>();
 	//private final MutableLiveData<byte[]> mStatusState = new MutableLiveData<>();
 	private final MutableLiveData<Integer> mStatusOID = new MutableLiveData<>();
 	private final MutableLiveData<Float> mStatusTemp = new MutableLiveData<>();
@@ -139,6 +140,7 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 	}
 	public MutableLiveData<Integer> getWakeState() { return mWakeState;	}
 	public MutableLiveData<Integer> getChargeState() { return mChargeState;	}
+    public MutableLiveData<Integer> getBootCauseState() { return mBootCauseState; }
 //	public LiveData<byte[]> getStatusState() {
 //		return mStatusState;
 //	}
@@ -417,6 +419,7 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 		int cmd    = data[0];
 		int subCmd = data[1];
 
+
 		switch(cmd) {
 			// CHAR_CMD_ARM
 			case 0 : {
@@ -482,6 +485,10 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 			case 8 : {
 				mChargeState.postValue(subCmd);
 			} break;
+            // CHAR_CMD_BOOT_CAUSE
+            case 9 : {
+                mBootCauseState.postValue(subCmd);
+            } break;
 		}
 
 	}

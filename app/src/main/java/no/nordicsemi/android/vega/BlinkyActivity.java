@@ -396,6 +396,23 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 			}
 		});
 
+		viewModel.getBootCauseState().observe(this, value -> {
+			TextView boot_cause_state = findViewById(R.id.boot_cause_status_text);
+            Log.e("getBootCauseState", String.valueOf(value));
+			switch(value) {
+				case 0   : boot_cause_state.setText("Нормальный старт");  break;
+				case 1   : boot_cause_state.setText("Завис поток MAIN");  break;
+				case 2   : boot_cause_state.setText("Завис поток GSM");   break;
+				case 4   : boot_cause_state.setText("Завис поток GPS");   break;
+				case 8   : boot_cause_state.setText("Завис поток TWI");   break;
+				case 16  : boot_cause_state.setText("Завис поток SPI");   break;
+				case 32  : boot_cause_state.setText("Перезагрузка");      break;
+				case 64  : boot_cause_state.setText("Hard Fault");        break;
+				case 177 : boot_cause_state.setText("DFU Загрузчик");     break;
+				default  : boot_cause_state.setText("Неизвестно");        break;
+			}
+		});
+
         viewModel.getWakeState().observe(this, value -> {
             TextView sleep_state = findViewById(R.id.info_device_sleep_value);
             if(value>0) {

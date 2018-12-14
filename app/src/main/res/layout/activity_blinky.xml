@@ -188,6 +188,30 @@
 					app:layout_constraintStart_toEndOf="@+id/charge_status"
 					app:layout_constraintTop_toTopOf="@+id/charge_status" />
 
+				<TextView
+					android:id="@+id/boot_cause_status"
+					android:layout_width="150dp"
+					android:layout_height="wrap_content"
+					android:layout_marginEnd="10dp"
+					android:layout_marginStart="10dp"
+					android:padding="1dp"
+					android:text="@string/boot_cause_status"
+					app:layout_constraintLeft_toLeftOf="parent"
+					app:layout_constraintTop_toBottomOf="@+id/charge_status" />
+
+				<TextView
+					android:id="@+id/boot_cause_status_text"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_marginEnd="10dp"
+					android:layout_marginStart="10dp"
+					android:gravity="right"
+					android:padding="1dp"
+					android:text="value"
+					app:layout_constraintEnd_toEndOf="parent"
+					app:layout_constraintStart_toEndOf="@+id/boot_cause_status"
+					app:layout_constraintTop_toTopOf="@+id/boot_cause_status" />
+
 			</android.support.constraint.ConstraintLayout>
 			</android.support.v7.widget.CardView>
 
@@ -217,8 +241,10 @@
 
 					<TextView
 						android:id="@+id/info_device_serial_value"
-						android:layout_width="wrap_content"
+						android:layout_width="match_parent"
 						android:layout_height="wrap_content"
+						android:layout_marginEnd="10dp"
+						android:layout_marginStart="10dp"
 						android:gravity="right"
 						android:padding="1dp"
 						android:text="value"

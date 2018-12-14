@@ -97,4 +97,5 @@
     <string name="gsm_ready">Готовность модема</string>
     <string name="gps_fix_time">Время</string>
     <string name="charge_status"><b>Зарядка</b></string>
+    <string name="boot_cause_status"><b>Причина запуска</b></string>
 </resources>
