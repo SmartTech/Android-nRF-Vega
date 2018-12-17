@@ -403,6 +403,7 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 				case 0   : boot_cause_state.setText("Нормальный старт");  break;
 				case 1   : boot_cause_state.setText("Завис поток MAIN");  break;
 				case 2   : boot_cause_state.setText("Завис поток GSM");   break;
+                case 3   : boot_cause_state.setText("Завис поток YIELD"); break;
 				case 4   : boot_cause_state.setText("Завис поток GPS");   break;
 				case 8   : boot_cause_state.setText("Завис поток TWI");   break;
 				case 16  : boot_cause_state.setText("Завис поток SPI");   break;
