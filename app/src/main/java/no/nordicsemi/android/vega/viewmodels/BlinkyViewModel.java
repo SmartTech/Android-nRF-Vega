@@ -96,6 +96,83 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 	// Flag that holds the pressed released state of the button on the devkit. Pressed is true, Released is False
 	private final MutableLiveData<Boolean> mButtonState = new MutableLiveData<>();
 
+	//----------------------------------------------------------------------------------------------
+
+	private final MutableLiveData<String>  mConfigPhone       = new MutableLiveData<>();
+	private final MutableLiveData<String>  mConfigID          = new MutableLiveData<>();
+	private final MutableLiveData<Integer> mConfigOID         = new MutableLiveData<>();
+	private final MutableLiveData<Integer> mConfigSleepIdle   = new MutableLiveData<>();
+	private final MutableLiveData<Integer> mConfigSleepArm    = new MutableLiveData<>();
+	private final MutableLiveData<Integer> mConfigAccel       = new MutableLiveData<>();
+	private final MutableLiveData<Integer> mConfigHall        = new MutableLiveData<>();
+	private final MutableLiveData<Integer> mConfigWaitRope    = new MutableLiveData<>();
+	private final MutableLiveData<Integer> mConfigTimeGSM     = new MutableLiveData<>();
+	private final MutableLiveData<Integer> mConfigTimeSMS     = new MutableLiveData<>();
+	private final MutableLiveData<Integer> mConfigTimeEGTS    = new MutableLiveData<>();
+	private final MutableLiveData<Integer> mConfigSmsGps      = new MutableLiveData<>();
+	private final MutableLiveData<Integer> mConfigSmsAlert    = new MutableLiveData<>();
+	private final MutableLiveData<Integer> mConfigSmsWake     = new MutableLiveData<>();
+	private final MutableLiveData<Integer> mConfigWialonUsage = new MutableLiveData<>();
+	private final MutableLiveData<Integer> mConfigWialonAddr  = new MutableLiveData<>();
+	private final MutableLiveData<Integer> mConfigGlosavAddr  = new MutableLiveData<>();
+	private final MutableLiveData<Integer> mConfigEgtsWake    = new MutableLiveData<>();
+	private final MutableLiveData<Integer> mConfigLoraUsage   = new MutableLiveData<>();
+	private final MutableLiveData<Integer> mConfigLoraP       = new MutableLiveData<>();
+	private final MutableLiveData<Integer> mConfigLoraT       = new MutableLiveData<>();
+	private final MutableLiveData<Integer> mConfigLoraD       = new MutableLiveData<>();
+	private final MutableLiveData<Integer> mConfigAlertFT     = new MutableLiveData<>();
+	private final MutableLiveData<Integer> mConfigAlertCL     = new MutableLiveData<>();
+	private final MutableLiveData<Integer> mConfigAlertAL     = new MutableLiveData<>();
+	private final MutableLiveData<Integer> mConfigGpsTFIX     = new MutableLiveData<>();
+	private final MutableLiveData<Integer> mConfigGpsTPOS     = new MutableLiveData<>();
+	private final MutableLiveData<Integer> mConfigGpsFNEAR    = new MutableLiveData<>();
+	private final MutableLiveData<Integer> mConfigGpsFSTOP    = new MutableLiveData<>();
+	private final MutableLiveData<Integer> mConfigGpsFSPD     = new MutableLiveData<>();
+	private final MutableLiveData<Integer> mConfigGpsFSKIP    = new MutableLiveData<>();
+	private final MutableLiveData<Integer> mConfigGpsFSAT     = new MutableLiveData<>();
+	private final MutableLiveData<Integer> mConfigGpsOSI      = new MutableLiveData<>();
+
+	public LiveData<String>  getConfigPhone()        { return mConfigPhone;         }
+	public LiveData<String>  getConfigID()           { return mConfigID;	        }
+	public LiveData<Integer> getConfigOID()          { return mConfigOID;	        }
+	public LiveData<Integer> getConfigSleepIdle()    { return mConfigSleepIdle;	    }
+	public LiveData<Integer> getConfigSleepArm()     { return mConfigSleepArm;	    }
+	public LiveData<Integer> getConfigAccel()        { return mConfigAccel;	        }
+	public LiveData<Integer> getConfigHall()         { return mConfigHall;   	    }
+	public LiveData<Integer> getConfigWaitRope()     { return mConfigWaitRope;	    }
+	public LiveData<Integer> getConfigTimeGSM()      { return mConfigTimeGSM;	    }
+	public LiveData<Integer> getConfigTimeSMS()      { return mConfigTimeSMS;	    }
+	public LiveData<Integer> getConfigTimeEGTS()     { return mConfigTimeEGTS;	    }
+	public LiveData<Integer> getConfigSmsGps()       { return mConfigSmsGps;	    }
+	public LiveData<Integer> getConfigSmsAlert()     { return mConfigSmsAlert;	    }
+	public LiveData<Integer> getConfigSmsWake()      { return mConfigSmsWake;	    }
+	public LiveData<Integer> getConfigWialonUsage()  { return mConfigWialonUsage;	}
+	public LiveData<Integer> getConfigWialonAddr()   { return mConfigWialonAddr;	}
+	public LiveData<Integer> getConfigGlosavAddr()   { return mConfigGlosavAddr;	}
+	public LiveData<Integer> getConfigEgtsWake()     { return mConfigEgtsWake;	    }
+	public LiveData<Integer> getConfigLoraUsage()    { return mConfigLoraUsage;  	}
+	public LiveData<Integer> getConfigLoraP()        { return mConfigLoraP;	        }
+	public LiveData<Integer> getConfigLoraT()        { return mConfigLoraT;     	}
+	public LiveData<Integer> getConfigLoraD()        { return mConfigLoraD;         }
+	public LiveData<Integer> getConfigAlertFT()      { return mConfigAlertFT;       }
+	public LiveData<Integer> getConfigAlertCL()      { return mConfigAlertCL;       }
+	public LiveData<Integer> getConfigAlertAL()      { return mConfigAlertAL;       }
+	public LiveData<Integer> getConfigGpsTFIX()      { return mConfigGpsTFIX;       }
+	public LiveData<Integer> getConfigGpsTPOS()      { return mConfigGpsTPOS;       }
+	public LiveData<Integer> getConfigGpsFNEAR()     { return mConfigGpsFNEAR;      }
+	public LiveData<Integer> getConfigGpsFSTOP()     { return mConfigGpsFSTOP;      }
+	public LiveData<Integer> getConfigGpsFSPD()      { return mConfigGpsFSPD;       }
+	public LiveData<Integer> getConfigGpsFSKIP()     { return mConfigGpsFSKIP;      }
+	public LiveData<Integer> getConfigGpsFSAT()      { return mConfigGpsFSAT;       }
+	public LiveData<Integer> getConfigGpsOSI()       { return mConfigGpsOSI;        }
+
+	private final MutableLiveData<byte[]> mConfigSeal = new MutableLiveData<>();
+
+	public MutableLiveData<byte[]> getConfigSeal()   { return mConfigSeal;   	    }
+
+	//----------------------------------------------------------------------------------------------
+
+
 	public LiveData<Void> isDeviceReady() {
 		return mOnDeviceReady;
 	}
@@ -203,6 +280,13 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 		final byte[] command = {6};
 		mBlinkyManager.write(command);
 		Log.e("ble", "requestGPS " );
+	}
+
+	// Запрос информации o GPS
+	public void requestConfig() {
+		final byte[] command = {10};
+		mBlinkyManager.write(command);
+		Log.e("ble", "requestConfig " );
 	}
 
 	// Запрос информации o GSM
@@ -419,7 +503,6 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 		int cmd    = data[0];
 		int subCmd = data[1];
 
-
 		switch(cmd) {
 			// CHAR_CMD_ARM
 			case 0 : {
@@ -477,10 +560,6 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 			case 7 : {
 				onCmdGSM(subCmd, data);
 			} break;
-				default: {
-				Log.e("onDataReceived", "Unknown cmd");
-				break;
-			}
 			// CHAR_CMD_CHARGE
 			case 8 : {
 				mChargeState.postValue(subCmd);
@@ -489,6 +568,13 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
             case 9 : {
                 mBootCauseState.postValue(subCmd);
             } break;
+			// CHAR_CMD_CONFIG_REQUEST
+			case 10 : {
+				mConfigSeal.postValue(data);
+			} break;
+			default: {
+				Log.e("onDataReceived", "Unknown cmd");
+			} break;
 		}
 
 	}

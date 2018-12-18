@@ -56,6 +56,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -69,11 +70,12 @@ import no.nordicsemi.android.vega.viewmodels.BlinkyViewModel;
 
 //import android.support.v4.app.FragmentManager;
 
-public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.ClickLoraDialogListener, LoraParametersFragment.LoraDataListener {
+public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.ClickLoraDialogListener, LoraParametersFragment.LoraDataListener, SealParametersFragment.SealDataListener {
 
 
 	public static final String EXTRA_DEVICE = "no.nordicsemi.android.vega.EXTRA_DEVICE";
 
+	SealParametersFragment sealParametersDialog = null;
     LoraParametersFragment loraParametersDialog = null;
     BlinkyViewModel viewModel;
 
@@ -82,6 +84,7 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 	LoraAdapter loraAdapter;
 
 	Button armControlBtn;
+	ImageButton sealConfigBtn;
     Button wakeBtn;
 	Button addLoraBtn;
 
@@ -171,6 +174,9 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 		armControlBtn = findViewById(R.id.arm_control_btn);
 		armControlBtn.setOnClickListener(armControlClicked);
 
+		sealConfigBtn = findViewById(R.id.sealConfigBtn);
+		sealConfigBtn.setOnClickListener(btnSealConfigClicked);
+
         wakeBtn = findViewById(R.id.button_wake);
         wakeBtn.setOnClickListener(btnWakeClicked);
 		armProgressBar = findViewById(R.id.arm_progress_bar);
@@ -218,14 +224,11 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 			Log.e("getArmState", "value = " + value);
 			// ожидание троса
 			if(value==0) {
-				if(skipedFirstArm) skipedFirstArm = false;
-				else {
-					armContainer.setBackgroundColor(Color.CYAN);
-					armState.setText(R.string.arm_state_prepare);
-					armControlBtn.setText(R.string.arm_button_arm);
-					armStateFlag = 1;
-					armBuilder.show();
-				}
+				armContainer.setBackgroundColor(Color.CYAN);
+				armState.setText(R.string.arm_state_prepare);
+				armControlBtn.setText(R.string.arm_button_arm);
+				armStateFlag = 1;
+				armBuilder.show();
 			}
 			// охрана установлена
 			else if(value==1) {
@@ -344,6 +347,153 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 				default: break;
 			}
 		});
+
+		viewModel.getConfigSeal().observe(this, value -> {
+			Log.e("Observed seal config", String.valueOf(value[1]) );
+			// CHAR_CMD_LORA events
+			if (sealParametersDialog != null) {
+				if (mTimeoutHandler != null ) {
+					mTimeoutHandler.removeCallbacksAndMessages(null);
+					mTimeoutHandler = null;
+				}
+				sealParametersDialog.onReceiveData(value);
+			}
+		});
+
+		//-----------------------------------------------------------------------------------------
+		viewModel.getConfigPhone().observe(this, value -> {
+			TextView parameterValue = findViewById(R.id.seal_config_value_phone);
+			parameterValue.setText(value);
+		});
+		viewModel.getConfigID().observe(this, value -> {
+			TextView parameterValue = findViewById(R.id.seal_config_value_id);
+			parameterValue.setText(value);
+		});
+		viewModel.getConfigOID().observe(this, value -> {
+			TextView parameterValue = findViewById(R.id.seal_config_value_oid);
+			parameterValue.setText(String.valueOf(value));
+		});
+		viewModel.getConfigSleepIdle().observe(this, value -> {
+			TextView parameterValue = findViewById(R.id.seal_config_value_sleepIdle);
+			parameterValue.setText(String.valueOf(value));
+		});
+		viewModel.getConfigSleepArm().observe(this, value -> {
+			TextView parameterValue = findViewById(R.id.seal_config_value_sleepArm);
+			parameterValue.setText(String.valueOf(value));
+		});
+		viewModel.getConfigAccel().observe(this, value -> {
+			//TextView parameterValue = findViewById(R.id.seal_config_value_);
+			//parameterValue.setText(String.valueOf(value) + "");
+		});
+		viewModel.getConfigHall().observe(this, value -> {
+			//TextView parameterValue = findViewById(R.id.seal_config_value_);
+			//parameterValue.setText(String.valueOf(value) + "");
+		});
+		viewModel.getConfigWaitRope().observe(this, value -> {
+			//TextView parameterValue = findViewById(R.id.seal_config_value_);
+			//parameterValue.setText(String.valueOf(value) + "");
+		});
+		viewModel.getConfigTimeGSM().observe(this, value -> {
+			//TextView parameterValue = findViewById(R.id.seal_config_value_);
+			//parameterValue.setText(String.valueOf(value) + "");
+		});
+		viewModel.getConfigTimeSMS().observe(this, value -> {
+			//TextView parameterValue = findViewById(R.id.seal_config_value_);
+			//parameterValue.setText(String.valueOf(value) + "");
+		});
+		viewModel.getConfigTimeEGTS().observe(this, value -> {
+			//TextView parameterValue = findViewById(R.id.seal_config_value_);
+			//parameterValue.setText(String.valueOf(value) + "");
+		});
+		viewModel.getConfigSmsGps().observe(this, value -> {
+			//TextView parameterValue = findViewById(R.id.seal_config_value_);
+			//parameterValue.setText(String.valueOf(value) + "");
+		});
+		viewModel.getConfigSmsAlert().observe(this, value -> {
+			//TextView parameterValue = findViewById(R.id.seal_config_value_);
+			//parameterValue.setText(String.valueOf(value) + "");
+		});
+		viewModel.getConfigSmsWake().observe(this, value -> {
+			//TextView parameterValue = findViewById(R.id.seal_config_value_);
+			//parameterValue.setText(String.valueOf(value) + "");
+		});
+		viewModel.getConfigWialonUsage().observe(this, value -> {
+			//TextView parameterValue = findViewById(R.id.seal_config_value_);
+			//parameterValue.setText(String.valueOf(value) + "");
+		});
+		viewModel.getConfigWialonAddr().observe(this, value -> {
+			//TextView parameterValue = findViewById(R.id.seal_config_value_);
+			//parameterValue.setText(String.valueOf(value) + "");
+		});
+		viewModel.getConfigGlosavAddr().observe(this, value -> {
+			//TextView parameterValue = findViewById(R.id.seal_config_value_);
+			//parameterValue.setText(String.valueOf(value) + "");
+		});
+		viewModel.getConfigEgtsWake().observe(this, value -> {
+			//TextView parameterValue = findViewById(R.id.seal_config_value_);
+			//parameterValue.setText(String.valueOf(value) + "");
+		});
+		viewModel.getConfigLoraUsage().observe(this, value -> {
+			//TextView parameterValue = findViewById(R.id.seal_config_value_);
+			//parameterValue.setText(String.valueOf(value) + "");
+		});
+		viewModel.getConfigLoraP().observe(this, value -> {
+			//TextView parameterValue = findViewById(R.id.seal_config_value_);
+			//parameterValue.setText(String.valueOf(value) + "");
+		});
+		viewModel.getConfigLoraT().observe(this, value -> {
+			//TextView parameterValue = findViewById(R.id.seal_config_value_);
+			//parameterValue.setText(String.valueOf(value) + "");
+		});
+		viewModel.getConfigLoraD().observe(this, value -> {
+			//TextView parameterValue = findViewById(R.id.seal_config_value_);
+			//parameterValue.setText(String.valueOf(value) + "");
+		});
+		viewModel.getConfigAlertFT().observe(this, value -> {
+			//TextView parameterValue = findViewById(R.id.seal_config_value_);
+			//parameterValue.setText(String.valueOf(value) + "");
+		});
+		viewModel.getConfigAlertCL().observe(this, value -> {
+			//TextView parameterValue = findViewById(R.id.seal_config_value_);
+			//parameterValue.setText(String.valueOf(value) + "");
+		});
+		viewModel.getConfigAlertAL().observe(this, value -> {
+			//TextView parameterValue = findViewById(R.id.seal_config_value_);
+			//parameterValue.setText(String.valueOf(value) + "");
+		});
+		viewModel.getConfigGpsTFIX().observe(this, value -> {
+			//TextView parameterValue = findViewById(R.id.seal_config_value_);
+			//parameterValue.setText(String.valueOf(value) + "");
+		});
+		viewModel.getConfigGpsTPOS().observe(this, value -> {
+			//TextView parameterValue = findViewById(R.id.seal_config_value_);
+			//parameterValue.setText(String.valueOf(value) + "");
+		});
+		viewModel.getConfigGpsFNEAR().observe(this, value -> {
+			//TextView parameterValue = findViewById(R.id.seal_config_value_);
+			//parameterValue.setText(String.valueOf(value) + "");
+		});
+		viewModel.getConfigGpsFSTOP().observe(this, value -> {
+			//TextView parameterValue = findViewById(R.id.seal_config_value_);
+			//parameterValue.setText(String.valueOf(value) + "");
+		});
+		viewModel.getConfigGpsFSPD().observe(this, value -> {
+			//TextView parameterValue = findViewById(R.id.seal_config_value_);
+			//parameterValue.setText(String.valueOf(value) + "");
+		});
+		viewModel.getConfigGpsFSKIP().observe(this, value -> {
+			//TextView parameterValue = findViewById(R.id.seal_config_value_);
+			//parameterValue.setText(String.valueOf(value) + "");
+		});
+		viewModel.getConfigGpsFSAT().observe(this, value -> {
+			//TextView parameterValue = findViewById(R.id.seal_config_value_);
+			//parameterValue.setText(String.valueOf(value) + "");
+		});
+		viewModel.getConfigGpsOSI().observe(this, value -> {
+			//TextView parameterValue = findViewById(R.id.seal_config_value_);
+			//parameterValue.setText(String.valueOf(value) + "");
+		});
+		//-----------------------------------------------------------------------------------------
 
 /*
         viewModel.getStatusState().observe(this, value -> {
@@ -606,6 +756,42 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 	@Override
 	public void OnLoraCloseClick() {
 		loraParametersDialog.dismiss();
+	}
+
+	View.OnClickListener btnSealConfigClicked = new View.OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			viewModel.requestConfig();
+			FragmentManager fm = getSupportFragmentManager();
+			sealParametersDialog = SealParametersFragment.newInstance();
+			sealParametersDialog.show(fm, "Seal Config");
+			mTimeoutHandler = new Handler();
+			mTimeoutHandler.postDelayed(new Runnable() {
+				public void run() {
+					sealParametersDialog.dismiss();
+					sealParametersDialog = null;
+				}
+			}, 5000);
+		}
+	};
+
+	@Override
+	public void OnSealSaveClick() {
+		//viewModel.saveConfig();
+		mTimeoutHandler = new Handler();
+		mTimeoutHandler.postDelayed(new Runnable() {
+			public void run() {
+				if (sealParametersDialog != null) {
+					sealParametersDialog.dismiss();
+				}
+				sealParametersDialog = null;
+			}
+		}, 5000);
+	}
+
+	@Override
+	public void OnSealCloseClick() {
+		sealParametersDialog.dismiss();
 	}
 
 	boolean checkAddrBytes(String str) {

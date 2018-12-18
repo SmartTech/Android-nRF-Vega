@@ -49,32 +49,56 @@
 			android:background="?attr/colorPrimary"
 			app:popupTheme="@style/AppTheme.PopupOverlay" >
 
-
-			<TextView
-				android:id="@+id/info_device_version_value"
+			<LinearLayout
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:layout_marginLeft="50dp"
-				android:text="v.3.xx"
-				android:textColor="#FFFFFF"
-				android:textStyle="bold"
-				android:textSize="15sp"/>
+				android:orientation="horizontal"
+				android:layout_gravity="right">
 
-			<TextView
-				android:id="@+id/battery"
+			<LinearLayout
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:layout_alignParentLeft="true"
-				android:layout_marginLeft="5dp"
-				android:layout_marginTop="8dp"
-				android:background="@drawable/battery"
-				android:freezesText="true"
-				android:gravity="center"
-				android:text="n/a"
-				android:textColor="#FFFFFF"
-				android:textSize="12sp"/>
+				android:orientation="vertical"
+				android:gravity="center">
+
+				<TextView
+					android:id="@+id/battery"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_alignParentLeft="true"
+					android:layout_marginLeft="5dp"
+					android:layout_margin="5dp"
+					android:layout_marginTop="8dp"
+					android:background="@drawable/battery"
+					android:freezesText="true"
+					android:gravity="center"
+					android:text="n/a"
+					android:textColor="#FFFFFF"
+					android:textSize="12sp"/>
+
+				<TextView
+					android:id="@+id/info_device_version_value"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="v.3.xx"
+					android:textColor="#FFFFFF"
+					android:textStyle="bold"
+					android:textSize="15sp"/>
+
+			</LinearLayout>
+
+				<ImageButton
+					android:id="@+id/sealConfigBtn"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_margin="5dp"
+					android:layout_gravity="center"
+					android:background="@android:drawable/ic_menu_preferences"/>
+
+			</LinearLayout>
 
 		</android.support.v7.widget.Toolbar>
+
 
 
 	</android.support.design.widget.AppBarLayout>
