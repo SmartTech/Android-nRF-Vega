@@ -37,6 +37,7 @@ import android.arch.lifecycle.MutableLiveData;
 import android.bluetooth.BluetoothDevice;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.widget.EditText;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -49,6 +50,8 @@ import no.nordicsemi.android.vega.R;
 import no.nordicsemi.android.vega.adapter.ExtendedBluetoothDevice;
 import no.nordicsemi.android.vega.profile.BlinkyManager;
 import no.nordicsemi.android.vega.profile.BlinkyManagerCallbacks;
+
+import static java.lang.Integer.valueOf;
 
 public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCallbacks {
 	private final BlinkyManager mBlinkyManager;
@@ -166,9 +169,9 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 	public LiveData<Integer> getConfigGpsFSAT()      { return mConfigGpsFSAT;       }
 	public LiveData<Integer> getConfigGpsOSI()       { return mConfigGpsOSI;        }
 
-	private final MutableLiveData<byte[]> mConfigSeal = new MutableLiveData<>();
+	//private final MutableLiveData<byte[]> mConfigSeal = new MutableLiveData<>();
 
-	public MutableLiveData<byte[]> getConfigSeal()   { return mConfigSeal;   	    }
+	//public MutableLiveData<byte[]> getConfigSeal()   { return mConfigSeal;   	    }
 
 	//----------------------------------------------------------------------------------------------
 
@@ -570,7 +573,34 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
             } break;
 			// CHAR_CMD_CONFIG_REQUEST
 			case 10 : {
-				mConfigSeal.postValue(data);
+//				mConfigSeal.postValue(data);
+				switch(data[1]) {
+					// CHAR_CONFIG_PHONE
+					case 0: {
+						//EditText seal_param = mParametersView.findViewById(R.id.seal_config_value_phone);
+					}
+					break;
+					// CHAR_CONFIG_ID
+					case 1: {
+						String value = String.valueOf(ByteBuffer.wrap(new byte[]{data[2], data[3], data[4], data[5]}).order(ByteOrder.LITTLE_ENDIAN).getInt());
+						mConfigID.postValue(value);
+					}
+					break;
+					// CHAR_CONFIG_OID
+					case 2: {
+						Integer value = ByteBuffer.wrap(new byte[]{data[2], data[3], data[4], data[5]}).order(ByteOrder.LITTLE_ENDIAN).getInt();
+						mConfigOID.postValue(value);
+					}
+					break;
+					// CHAR_CONFIG_SLEEP_IDLE
+					case 3: {
+						Integer value = ByteBuffer.wrap(new byte[]{data[2], data[3], data[4], data[5]}).order(ByteOrder.LITTLE_ENDIAN).getInt();
+						mConfigSleepIdle.postValue(value);
+					}
+					break;
+					/////
+					/** И т.д. */
+				}
 			} break;
 			default: {
 				Log.e("onDataReceived", "Unknown cmd");

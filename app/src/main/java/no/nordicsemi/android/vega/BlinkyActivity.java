@@ -347,7 +347,7 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 				default: break;
 			}
 		});
-
+/*
 		viewModel.getConfigSeal().observe(this, value -> {
 			Log.e("Observed seal config", String.valueOf(value[1]) );
 			// CHAR_CMD_LORA events
@@ -359,27 +359,34 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 				sealParametersDialog.onReceiveData(value);
 			}
 		});
-
+*/
 		//-----------------------------------------------------------------------------------------
 		viewModel.getConfigPhone().observe(this, value -> {
-			TextView parameterValue = findViewById(R.id.seal_config_value_phone);
-			parameterValue.setText(value);
+//			TextView parameterValue = findViewById(R.id.seal_config_value_phone);
+//			parameterValue.setText(value);
+			setSealParameter(0, value);
 		});
 		viewModel.getConfigID().observe(this, value -> {
-			TextView parameterValue = findViewById(R.id.seal_config_value_id);
-			parameterValue.setText(value);
+//			TextView parameterValue = findViewById(R.id.seal_config_value_id);
+//			parameterValue.setText(value);
+			setSealParameter(1, value);
+
 		});
 		viewModel.getConfigOID().observe(this, value -> {
-			TextView parameterValue = findViewById(R.id.seal_config_value_oid);
-			parameterValue.setText(String.valueOf(value));
+//			TextView parameterValue = findViewById(R.id.seal_config_value_oid);
+//			parameterValue.setText(String.valueOf(value));
+			setSealParameter(2, value);
+
 		});
 		viewModel.getConfigSleepIdle().observe(this, value -> {
-			TextView parameterValue = findViewById(R.id.seal_config_value_sleepIdle);
-			parameterValue.setText(String.valueOf(value));
+//			TextView parameterValue = findViewById(R.id.seal_config_value_sleepIdle);
+//			parameterValue.setText(String.valueOf(value));
+			setSealParameter(3, value);
+
 		});
 		viewModel.getConfigSleepArm().observe(this, value -> {
-			TextView parameterValue = findViewById(R.id.seal_config_value_sleepArm);
-			parameterValue.setText(String.valueOf(value));
+//			TextView parameterValue = findViewById(R.id.seal_config_value_sleepArm);
+//			parameterValue.setText(String.valueOf(value));
 		});
 		viewModel.getConfigAccel().observe(this, value -> {
 			//TextView parameterValue = findViewById(R.id.seal_config_value_);
@@ -712,6 +719,16 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 		}
 	};
 
+	private void setSealParameter(int index, Object value) {
+		if (sealParametersDialog != null) {
+			if (mTimeoutHandler != null ) {
+				mTimeoutHandler.removeCallbacksAndMessages(null);
+				mTimeoutHandler = null;
+			}
+			sealParametersDialog.onReceiveData(index, value);
+		}
+
+	}
 	@Override
 	public boolean onOptionsItemSelected(final MenuItem item) {
 		switch (item.getItemId()) {

@@ -27,12 +27,12 @@ import java.nio.ByteOrder;
 public class SealParametersFragment extends DialogFragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_INDEX = "index";
-    private static final String ARG_ADDRESS = "param2";
+//    private static final String ARG_INDEX = "index";
+//    private static final String ARG_ADDRESS = "param2";
 
     // TODO: Rename and change types of parameters
-    private int mIndex;
-    private String mAddress;
+//    private int mIndex;
+//    private String mAddress;
     private View mProgressBar;
     private View mParametersView;
 
@@ -58,20 +58,20 @@ public class SealParametersFragment extends DialogFragment {
     // TODO: Rename and change types and number of parameters
     public static SealParametersFragment newInstance() {
         SealParametersFragment fragment = new SealParametersFragment();
-        Bundle args = new Bundle();
+//        Bundle args = new Bundle();
         //args.putInt(ARG_INDEX, param1);
         //args.putString(ARG_ADDRESS, param2);
-        fragment.setArguments(args);
+//        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mIndex = getArguments().getInt(ARG_INDEX);
-            mAddress = getArguments().getString(ARG_ADDRESS);
-        }
+//        if (getArguments() != null) {
+//            mIndex = getArguments().getInt(ARG_INDEX);
+//            mAddress = getArguments().getString(ARG_ADDRESS);
+//        }
     }
 
     @Override
@@ -129,37 +129,41 @@ public class SealParametersFragment extends DialogFragment {
         return x == 0 ? 0 : 1;
     }
 
-    public void onReceiveData(byte[] data) {
+    public void onReceiveData(int index, Object data) {
 
-        byte dataTemp[] = new byte[]{data[2], data[3], data[4], data[5]};
+//        byte dataTemp[] = new byte[]{data[2], data[3], data[4], data[5]};
 
-        switch(data[1]) {
+        switch(index) {
         	// CHAR_CONFIG_PHONE
         	case 0 : {
                 //EditText seal_param = mParametersView.findViewById(R.id.seal_config_value_phone);
         	} break;
         	// CHAR_CONFIG_ID
         	case 1 : {
-                //EditText seal_param = mParametersView.findViewById(R.id.seal_config_value_id);
+                EditText seal_param = mParametersView.findViewById(R.id.seal_config_value_id);
+                String value = (String) data;
                 //seal_param.setText(String.valueOf(ByteBuffer.wrap(dataTemp).order(ByteOrder.LITTLE_ENDIAN).getInt()));
+                seal_param.setText(value);
         	} break;
         	// CHAR_CONFIG_OID
         	case 2 : {
                 EditText seal_param = mParametersView.findViewById(R.id.seal_config_value_oid);
-                String value = String.valueOf(ByteBuffer.wrap(dataTemp).order(ByteOrder.LITTLE_ENDIAN).getInt());
-                seal_param.setText(value);
+//                String value = String.valueOf(ByteBuffer.wrap(dataTemp).order(ByteOrder.LITTLE_ENDIAN).getInt());
+                Integer value = (Integer) data;
+                seal_param.setText(String.valueOf(value));
         	} break;
         	// CHAR_CONFIG_SLEEP_IDLE
         	case 3 : {
                 EditText seal_param = mParametersView.findViewById(R.id.seal_config_value_sleepIdle);
-                String value = String.valueOf(ByteBuffer.wrap(dataTemp).order(ByteOrder.LITTLE_ENDIAN).getInt());
-                seal_param.setText(value);
+//                String value = String.valueOf(ByteBuffer.wrap(dataTemp).order(ByteOrder.LITTLE_ENDIAN).getInt());
+                Integer value = (Integer) data;
+                seal_param.setText(String.valueOf(value));
         	} break;
         	// CHAR_CONFIG_SLEEP_ARM
         	case 4 : {
-                EditText seal_param = mParametersView.findViewById(R.id.seal_config_value_sleepArm);
-                String value = String.valueOf(ByteBuffer.wrap(dataTemp).order(ByteOrder.LITTLE_ENDIAN).getInt());
-                seal_param.setText(value);
+//                EditText seal_param = mParametersView.findViewById(R.id.seal_config_value_sleepArm);
+//                String value = String.valueOf(ByteBuffer.wrap(dataTemp).order(ByteOrder.LITTLE_ENDIAN).getInt());
+//                seal_param.setText(value);
         	} break;
         	// CHAR_CONFIG_ACCEL
         	case 5 : {
@@ -175,21 +179,21 @@ public class SealParametersFragment extends DialogFragment {
         	} break;
         	// CHAR_CONFIG_TIME_GSM
         	case 8 : {
-                EditText seal_param = mParametersView.findViewById(R.id.seal_config_value_time_gsm);
-                String value = String.valueOf(ByteBuffer.wrap(dataTemp).order(ByteOrder.LITTLE_ENDIAN).getInt());
-                seal_param.setText(value);
+//                EditText seal_param = mParametersView.findViewById(R.id.seal_config_value_time_gsm);
+//                String value = String.valueOf(ByteBuffer.wrap(dataTemp).order(ByteOrder.LITTLE_ENDIAN).getInt());
+//                seal_param.setText(value);
         	} break;
         	// CHAR_CONFIG_TIME_SMS
         	case 9 : {
-                EditText seal_param = mParametersView.findViewById(R.id.seal_config_value_time_sms);
-                String value = String.valueOf(ByteBuffer.wrap(dataTemp).order(ByteOrder.LITTLE_ENDIAN).getInt());
-                seal_param.setText(value);
+//                EditText seal_param = mParametersView.findViewById(R.id.seal_config_value_time_sms);
+//                String value = String.valueOf(ByteBuffer.wrap(dataTemp).order(ByteOrder.LITTLE_ENDIAN).getInt());
+//                seal_param.setText(value);
         	} break;
         	// CHAR_CONFIG_TIME_EGTS
         	case 10 : {
-                EditText seal_param = mParametersView.findViewById(R.id.seal_config_value_time_egts);
-                String value = String.valueOf(ByteBuffer.wrap(dataTemp).order(ByteOrder.LITTLE_ENDIAN).getInt());
-                seal_param.setText(value);
+//                EditText seal_param = mParametersView.findViewById(R.id.seal_config_value_time_egts);
+//                String value = String.valueOf(ByteBuffer.wrap(dataTemp).order(ByteOrder.LITTLE_ENDIAN).getInt());
+//                seal_param.setText(value);
         	} break;
         	// CHAR_CONFIG_SMS_GPS
         	case 11 : {
@@ -237,69 +241,69 @@ public class SealParametersFragment extends DialogFragment {
         	} break;
         	// CHAR_CONFIG_ALERT_FT
         	case 22 : {
-                EditText seal_param = mParametersView.findViewById(R.id.seal_config_value_alert_ft);
-                String value = String.valueOf(ByteBuffer.wrap(dataTemp).order(ByteOrder.LITTLE_ENDIAN).getInt());
-                seal_param.setText(value);
+//                EditText seal_param = mParametersView.findViewById(R.id.seal_config_value_alert_ft);
+//                String value = String.valueOf(ByteBuffer.wrap(dataTemp).order(ByteOrder.LITTLE_ENDIAN).getInt());
+//                seal_param.setText(value);
         	} break;
         	// CHAR_CONFIG_ALERT_CL
         	case 23 : {
-                EditText seal_param = mParametersView.findViewById(R.id.seal_config_value_alert_cl);
-                String value = String.valueOf(ByteBuffer.wrap(dataTemp).order(ByteOrder.LITTLE_ENDIAN).getInt());
-                seal_param.setText(value);
+//                EditText seal_param = mParametersView.findViewById(R.id.seal_config_value_alert_cl);
+//                String value = String.valueOf(ByteBuffer.wrap(dataTemp).order(ByteOrder.LITTLE_ENDIAN).getInt());
+//                seal_param.setText(value);
         	} break;
         	// CHAR_CONFIG_ALERT_AL
         	case 24 : {
-                EditText seal_param = mParametersView.findViewById(R.id.seal_config_value_alert_al);
-                String value = String.valueOf(ByteBuffer.wrap(dataTemp).order(ByteOrder.LITTLE_ENDIAN).getInt());
-                seal_param.setText(value);
+//                EditText seal_param = mParametersView.findViewById(R.id.seal_config_value_alert_al);
+//                String value = String.valueOf(ByteBuffer.wrap(dataTemp).order(ByteOrder.LITTLE_ENDIAN).getInt());
+//                seal_param.setText(value);
         	} break;
         	// CHAR_CONFIG_GPS_TFIX
         	case 25 : {
-                EditText seal_param = mParametersView.findViewById(R.id.seal_config_value_gps_tfix);
-                String value = String.valueOf(ByteBuffer.wrap(dataTemp).order(ByteOrder.LITTLE_ENDIAN).getInt());
-                seal_param.setText(value);
+//                EditText seal_param = mParametersView.findViewById(R.id.seal_config_value_gps_tfix);
+//                String value = String.valueOf(ByteBuffer.wrap(dataTemp).order(ByteOrder.LITTLE_ENDIAN).getInt());
+//                seal_param.setText(value);
         	} break;
         	// CHAR_CONFIG_GPS_TPOS
         	case 26 : {
-                EditText seal_param = mParametersView.findViewById(R.id.seal_config_value_gps_tpos);
-                String value = String.valueOf(ByteBuffer.wrap(dataTemp).order(ByteOrder.LITTLE_ENDIAN).getInt());
-                seal_param.setText(value);
+//                EditText seal_param = mParametersView.findViewById(R.id.seal_config_value_gps_tpos);
+//                String value = String.valueOf(ByteBuffer.wrap(dataTemp).order(ByteOrder.LITTLE_ENDIAN).getInt());
+//                seal_param.setText(value);
         	} break;
         	// CHAR_CONFIG_GPS_FNEAR
         	case 27 : {
-                EditText seal_param = mParametersView.findViewById(R.id.seal_config_value_gps_fnear);
-                String value = String.valueOf(ByteBuffer.wrap(dataTemp).order(ByteOrder.LITTLE_ENDIAN).getInt());
-                seal_param.setText(value);
+//                EditText seal_param = mParametersView.findViewById(R.id.seal_config_value_gps_fnear);
+//                String value = String.valueOf(ByteBuffer.wrap(dataTemp).order(ByteOrder.LITTLE_ENDIAN).getInt());
+//                seal_param.setText(value);
         	} break;
         	// CHAR_CONFIG_GPS_FSTOP
         	case 28 : {
-                EditText seal_param = mParametersView.findViewById(R.id.seal_config_value_gps_fstop);
-                String value = String.valueOf(ByteBuffer.wrap(dataTemp).order(ByteOrder.LITTLE_ENDIAN).getInt());
-                seal_param.setText(value);
+//                EditText seal_param = mParametersView.findViewById(R.id.seal_config_value_gps_fstop);
+//                String value = String.valueOf(ByteBuffer.wrap(dataTemp).order(ByteOrder.LITTLE_ENDIAN).getInt());
+//                seal_param.setText(value);
         	} break;
         	// CHAR_CONFIG_GPS_FSPD
         	case 29 : {
-                EditText seal_param = mParametersView.findViewById(R.id.seal_config_value_gps_fspd);
-                String value = String.valueOf(ByteBuffer.wrap(dataTemp).order(ByteOrder.LITTLE_ENDIAN).getInt());
-                seal_param.setText(value);
+//                EditText seal_param = mParametersView.findViewById(R.id.seal_config_value_gps_fspd);
+//                String value = String.valueOf(ByteBuffer.wrap(dataTemp).order(ByteOrder.LITTLE_ENDIAN).getInt());
+//                seal_param.setText(value);
         	} break;
         	// CHAR_CONFIG_GPS_FSKIP
         	case 30 : {
-                EditText seal_param = mParametersView.findViewById(R.id.seal_config_value_gps_fskip);
-                String value = String.valueOf(ByteBuffer.wrap(dataTemp).order(ByteOrder.LITTLE_ENDIAN).getInt());
-                seal_param.setText(value);
+//                EditText seal_param = mParametersView.findViewById(R.id.seal_config_value_gps_fskip);
+//                String value = String.valueOf(ByteBuffer.wrap(dataTemp).order(ByteOrder.LITTLE_ENDIAN).getInt());
+//                seal_param.setText(value);
         	} break;
         	// CHAR_CONFIG_GPS_FSAT
         	case 31 : {
-                EditText seal_param = mParametersView.findViewById(R.id.seal_config_value_gps_fsat);
-                String value = String.valueOf(ByteBuffer.wrap(dataTemp).order(ByteOrder.LITTLE_ENDIAN).getInt());
-                seal_param.setText(value);
+//                EditText seal_param = mParametersView.findViewById(R.id.seal_config_value_gps_fsat);
+//                String value = String.valueOf(ByteBuffer.wrap(dataTemp).order(ByteOrder.LITTLE_ENDIAN).getInt());
+//                seal_param.setText(value);
         	} break;
         	// CHAR_CONFIG_GPS_OSI
         	case 32 : {
-                EditText seal_param = mParametersView.findViewById(R.id.seal_config_value_gps_osi);
-                String value = String.valueOf(ByteBuffer.wrap(dataTemp).order(ByteOrder.LITTLE_ENDIAN).getInt());
-                seal_param.setText(value);
+//                EditText seal_param = mParametersView.findViewById(R.id.seal_config_value_gps_osi);
+//                String value = String.valueOf(ByteBuffer.wrap(dataTemp).order(ByteOrder.LITTLE_ENDIAN).getInt());
+//                seal_param.setText(value);
         	} break;
         	default: {
         		Log.e("onCmdConfig", "Unknown subCmd");
