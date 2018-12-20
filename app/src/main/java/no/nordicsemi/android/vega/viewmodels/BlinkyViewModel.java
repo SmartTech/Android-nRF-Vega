@@ -37,7 +37,6 @@ import android.arch.lifecycle.MutableLiveData;
 import android.bluetooth.BluetoothDevice;
 import android.support.annotation.NonNull;
 import android.util.Log;
-import android.widget.EditText;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -50,8 +49,6 @@ import no.nordicsemi.android.vega.R;
 import no.nordicsemi.android.vega.adapter.ExtendedBluetoothDevice;
 import no.nordicsemi.android.vega.profile.BlinkyManager;
 import no.nordicsemi.android.vega.profile.BlinkyManagerCallbacks;
-
-import static java.lang.Integer.valueOf;
 
 public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCallbacks {
 	private final BlinkyManager mBlinkyManager;
@@ -497,6 +494,178 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 
 	}
 
+    void onCmdConfig(int subCmd, final byte[] data) {
+        Log.e("onCmdConfig", "subCmd = " + subCmd);
+        switch(subCmd) {
+            // CHAR_CONFIG_PHONE
+            case 0: {
+
+            } break;
+            // CHAR_CONFIG_ID
+            case 1: {
+
+            } break;
+            // CHAR_CONFIG_OID
+            case 2: {
+                Integer value = ByteBuffer.wrap(new byte[]{data[2], data[3], data[4], data[5]}).order(ByteOrder.LITTLE_ENDIAN).getInt();
+                mConfigOID.postValue(value);
+            } break;
+            // CHAR_CONFIG_SLEEP_IDLE
+            case 3: {
+                Integer value = ByteBuffer.wrap(new byte[]{data[2], data[3], data[4], data[5]}).order(ByteOrder.LITTLE_ENDIAN).getInt();
+                mConfigSleepIdle.postValue(value);
+            }  break;
+            // CHAR_CONFIG_SLEEP_ARM
+            case 4: {
+                Integer value = ByteBuffer.wrap(new byte[]{data[2], data[3], data[4], data[5]}).order(ByteOrder.LITTLE_ENDIAN).getInt();
+                mConfigSleepArm.postValue(value);
+            } break;
+            // CHAR_CONFIG_ACCEL
+            case 5: {
+                Integer value = ByteBuffer.wrap(new byte[]{data[2], data[3], data[4], data[5]}).order(ByteOrder.LITTLE_ENDIAN).getInt();
+                mConfigAccel.postValue(value);
+            } break;
+            // CHAR_CONFIG_HALL
+            case 6: {
+                Integer value = ByteBuffer.wrap(new byte[]{data[2], data[3], data[4], data[5]}).order(ByteOrder.LITTLE_ENDIAN).getInt();
+                mConfigHall.postValue(value);
+            } break;
+            // CHAR_CONFIG_WAIT
+            case 7: {
+                Integer value = ByteBuffer.wrap(new byte[]{data[2], data[3], data[4], data[5]}).order(ByteOrder.LITTLE_ENDIAN).getInt();
+                mConfigWaitRope.postValue(value);
+            } break;
+            // CHAR_CONFIG_TIME_GSM
+            case 8: {
+                Integer value = ByteBuffer.wrap(new byte[]{data[2], data[3], data[4], data[5]}).order(ByteOrder.LITTLE_ENDIAN).getInt();
+                mConfigTimeGSM.postValue(value);
+            } break;
+            // CHAR_CONFIG_TIME_SMS
+            case 9: {
+                Integer value = ByteBuffer.wrap(new byte[]{data[2], data[3], data[4], data[5]}).order(ByteOrder.LITTLE_ENDIAN).getInt();
+                mConfigTimeSMS.postValue(value);
+            } break;
+            // CHAR_CONFIG_TIME_EGTS
+            case 10: {
+                Integer value = ByteBuffer.wrap(new byte[]{data[2], data[3], data[4], data[5]}).order(ByteOrder.LITTLE_ENDIAN).getInt();
+                mConfigTimeEGTS.postValue(value);
+            } break;
+            // CHAR_CONFIG_SMS_GPS
+            case 11: {
+                Integer value = ByteBuffer.wrap(new byte[]{data[2], data[3], data[4], data[5]}).order(ByteOrder.LITTLE_ENDIAN).getInt();
+                mConfigSmsGps.postValue(value);
+            } break;
+            // CHAR_CONFIG_SMS_ALERT
+            case 12: {
+                Integer value = ByteBuffer.wrap(new byte[]{data[2], data[3], data[4], data[5]}).order(ByteOrder.LITTLE_ENDIAN).getInt();
+                mConfigSmsAlert.postValue(value);
+            } break;
+            // CHAR_CONFIG_SMS_WAKE
+            case 13: {
+                Integer value = ByteBuffer.wrap(new byte[]{data[2], data[3], data[4], data[5]}).order(ByteOrder.LITTLE_ENDIAN).getInt();
+                mConfigSmsWake.postValue(value);
+            } break;
+            // CHAR_CONFIG_WIALON_USAGE
+            case 14: {
+                Integer value = ByteBuffer.wrap(new byte[]{data[2], data[3], data[4], data[5]}).order(ByteOrder.LITTLE_ENDIAN).getInt();
+                mConfigWialonUsage.postValue(value);
+            } break;
+            // CHAR_CONFIG_WIALON_ADDR
+            case 15: {
+                Integer value = ByteBuffer.wrap(new byte[]{data[2], data[3], data[4], data[5]}).order(ByteOrder.LITTLE_ENDIAN).getInt();
+                mConfigWialonAddr.postValue(value);
+            } break;
+            // CHAR_CONFIG_GLOSAV_ADDR
+            case 16: {
+                Integer value = ByteBuffer.wrap(new byte[]{data[2], data[3], data[4], data[5]}).order(ByteOrder.LITTLE_ENDIAN).getInt();
+                mConfigGlosavAddr.postValue(value);
+            } break;
+            // CHAR_CONFIG_EGTS_WAKE
+            case 17: {
+                Integer value = ByteBuffer.wrap(new byte[]{data[2], data[3], data[4], data[5]}).order(ByteOrder.LITTLE_ENDIAN).getInt();
+                mConfigEgtsWake.postValue(value);
+            } break;
+            // CHAR_CONFIG_LORA_USAGE
+            case 18: {
+                Integer value = ByteBuffer.wrap(new byte[]{data[2], data[3], data[4], data[5]}).order(ByteOrder.LITTLE_ENDIAN).getInt();
+                mConfigLoraUsage.postValue(value);
+            } break;
+            // CHAR_CONFIG_LORA_PERIOD
+            case 19: {
+                Integer value = ByteBuffer.wrap(new byte[]{data[2], data[3], data[4], data[5]}).order(ByteOrder.LITTLE_ENDIAN).getInt();
+                mConfigLoraP.postValue(value);
+            } break;
+            // CHAR_CONFIG_LORA_TIME
+            case 20: {
+                Integer value = ByteBuffer.wrap(new byte[]{data[2], data[3], data[4], data[5]}).order(ByteOrder.LITTLE_ENDIAN).getInt();
+                mConfigLoraT.postValue(value);
+            } break;
+            // CHAR_CONFIG_LORA_POWER
+            case 21: {
+                Integer value = ByteBuffer.wrap(new byte[]{data[2], data[3], data[4], data[5]}).order(ByteOrder.LITTLE_ENDIAN).getInt();
+                mConfigLoraD.postValue(value);
+            } break;
+            // CHAR_CONFIG_ALERT_FT
+            case 22: {
+                Integer value = ByteBuffer.wrap(new byte[]{data[2], data[3], data[4], data[5]}).order(ByteOrder.LITTLE_ENDIAN).getInt();
+                mConfigAlertFT.postValue(value);
+            } break;
+            // CHAR_CONFIG_ALERT_CL
+            case 23: {
+                Integer value = ByteBuffer.wrap(new byte[]{data[2], data[3], data[4], data[5]}).order(ByteOrder.LITTLE_ENDIAN).getInt();
+                mConfigAlertCL.postValue(value);
+            } break;
+            // CHAR_CONFIG_ALERT_AL
+            case 24: {
+                Integer value = ByteBuffer.wrap(new byte[]{data[2], data[3], data[4], data[5]}).order(ByteOrder.LITTLE_ENDIAN).getInt();
+                mConfigAlertAL.postValue(value);
+            } break;
+            // CHAR_CONFIG_GPS_TFIX
+            case 25: {
+                Integer value = ByteBuffer.wrap(new byte[]{data[2], data[3], data[4], data[5]}).order(ByteOrder.LITTLE_ENDIAN).getInt();
+                mConfigGpsTFIX.postValue(value);
+            } break;
+            // CHAR_CONFIG_GPS_TPOS
+            case 26: {
+                Integer value = ByteBuffer.wrap(new byte[]{data[2], data[3], data[4], data[5]}).order(ByteOrder.LITTLE_ENDIAN).getInt();
+                mConfigGpsTPOS.postValue(value);
+            } break;
+            // CHAR_CONFIG_GPS_FNEAR
+            case 27: {
+                Integer value = ByteBuffer.wrap(new byte[]{data[2], data[3], data[4], data[5]}).order(ByteOrder.LITTLE_ENDIAN).getInt();
+                mConfigGpsFNEAR.postValue(value);
+            } break;
+            // CHAR_CONFIG_GPS_FSTOP
+            case 28: {
+                Integer value = ByteBuffer.wrap(new byte[]{data[2], data[3], data[4], data[5]}).order(ByteOrder.LITTLE_ENDIAN).getInt();
+                mConfigGpsFSTOP.postValue(value);
+            } break;
+            // CHAR_CONFIG_GPS_FSPD
+            case 29: {
+                Integer value = ByteBuffer.wrap(new byte[]{data[2], data[3], data[4], data[5]}).order(ByteOrder.LITTLE_ENDIAN).getInt();
+                mConfigGpsFSPD.postValue(value);
+            } break;
+            // CHAR_CONFIG_GPS_FSKIP
+            case 30: {
+                Integer value = ByteBuffer.wrap(new byte[]{data[2], data[3], data[4], data[5]}).order(ByteOrder.LITTLE_ENDIAN).getInt();
+                mConfigGpsFSKIP.postValue(value);
+            } break;
+            // CHAR_CONFIG_GPS_FSAT
+            case 31: {
+                Integer value = ByteBuffer.wrap(new byte[]{data[2], data[3], data[4], data[5]}).order(ByteOrder.LITTLE_ENDIAN).getInt();
+                mConfigGpsFSAT.postValue(value);
+            } break;
+            // CHAR_CONFIG_GPS_OSI
+            case 32: {
+                Integer value = ByteBuffer.wrap(new byte[]{data[2], data[3], data[4], data[5]}).order(ByteOrder.LITTLE_ENDIAN).getInt();
+                mConfigGpsOSI.postValue(value);
+            } break;
+            default: {
+                Log.e("onCmdConfig", "Unknown subCmd");
+            } break;
+        }
+    }
+
 	@Override
 	public void onDataReceived(final byte[] data) {
 
@@ -573,34 +742,7 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
             } break;
 			// CHAR_CMD_CONFIG_REQUEST
 			case 10 : {
-//				mConfigSeal.postValue(data);
-				switch(data[1]) {
-					// CHAR_CONFIG_PHONE
-					case 0: {
-						//EditText seal_param = mParametersView.findViewById(R.id.seal_config_value_phone);
-					}
-					break;
-					// CHAR_CONFIG_ID
-					case 1: {
-						String value = String.valueOf(ByteBuffer.wrap(new byte[]{data[2], data[3], data[4], data[5]}).order(ByteOrder.LITTLE_ENDIAN).getInt());
-						mConfigID.postValue(value);
-					}
-					break;
-					// CHAR_CONFIG_OID
-					case 2: {
-						Integer value = ByteBuffer.wrap(new byte[]{data[2], data[3], data[4], data[5]}).order(ByteOrder.LITTLE_ENDIAN).getInt();
-						mConfigOID.postValue(value);
-					}
-					break;
-					// CHAR_CONFIG_SLEEP_IDLE
-					case 3: {
-						Integer value = ByteBuffer.wrap(new byte[]{data[2], data[3], data[4], data[5]}).order(ByteOrder.LITTLE_ENDIAN).getInt();
-						mConfigSleepIdle.postValue(value);
-					}
-					break;
-					/////
-					/** И т.д. */
-				}
+			    onCmdConfig(subCmd, data);
 			} break;
 			default: {
 				Log.e("onDataReceived", "Unknown cmd");

@@ -362,143 +362,103 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 */
 		//-----------------------------------------------------------------------------------------
 		viewModel.getConfigPhone().observe(this, value -> {
-//			TextView parameterValue = findViewById(R.id.seal_config_value_phone);
-//			parameterValue.setText(value);
 			setSealParameter(0, value);
 		});
 		viewModel.getConfigID().observe(this, value -> {
-//			TextView parameterValue = findViewById(R.id.seal_config_value_id);
-//			parameterValue.setText(value);
 			setSealParameter(1, value);
-
 		});
 		viewModel.getConfigOID().observe(this, value -> {
-//			TextView parameterValue = findViewById(R.id.seal_config_value_oid);
-//			parameterValue.setText(String.valueOf(value));
 			setSealParameter(2, value);
-
 		});
 		viewModel.getConfigSleepIdle().observe(this, value -> {
-//			TextView parameterValue = findViewById(R.id.seal_config_value_sleepIdle);
-//			parameterValue.setText(String.valueOf(value));
 			setSealParameter(3, value);
-
 		});
 		viewModel.getConfigSleepArm().observe(this, value -> {
-//			TextView parameterValue = findViewById(R.id.seal_config_value_sleepArm);
-//			parameterValue.setText(String.valueOf(value));
+			setSealParameter(4, value);
 		});
 		viewModel.getConfigAccel().observe(this, value -> {
-			//TextView parameterValue = findViewById(R.id.seal_config_value_);
-			//parameterValue.setText(String.valueOf(value) + "");
+			setSealParameter(5, value);
 		});
 		viewModel.getConfigHall().observe(this, value -> {
-			//TextView parameterValue = findViewById(R.id.seal_config_value_);
-			//parameterValue.setText(String.valueOf(value) + "");
+			setSealParameter(6, value);
 		});
 		viewModel.getConfigWaitRope().observe(this, value -> {
-			//TextView parameterValue = findViewById(R.id.seal_config_value_);
-			//parameterValue.setText(String.valueOf(value) + "");
+			setSealParameter(7, value);
 		});
 		viewModel.getConfigTimeGSM().observe(this, value -> {
-			//TextView parameterValue = findViewById(R.id.seal_config_value_);
-			//parameterValue.setText(String.valueOf(value) + "");
+			setSealParameter(8, value);
 		});
 		viewModel.getConfigTimeSMS().observe(this, value -> {
-			//TextView parameterValue = findViewById(R.id.seal_config_value_);
-			//parameterValue.setText(String.valueOf(value) + "");
+			setSealParameter(9, value);
 		});
 		viewModel.getConfigTimeEGTS().observe(this, value -> {
-			//TextView parameterValue = findViewById(R.id.seal_config_value_);
-			//parameterValue.setText(String.valueOf(value) + "");
+			setSealParameter(10, value);
 		});
 		viewModel.getConfigSmsGps().observe(this, value -> {
-			//TextView parameterValue = findViewById(R.id.seal_config_value_);
-			//parameterValue.setText(String.valueOf(value) + "");
+			setSealParameter(11, value);
 		});
 		viewModel.getConfigSmsAlert().observe(this, value -> {
-			//TextView parameterValue = findViewById(R.id.seal_config_value_);
-			//parameterValue.setText(String.valueOf(value) + "");
+			setSealParameter(12, value);
 		});
 		viewModel.getConfigSmsWake().observe(this, value -> {
-			//TextView parameterValue = findViewById(R.id.seal_config_value_);
-			//parameterValue.setText(String.valueOf(value) + "");
+			setSealParameter(13, value);
 		});
 		viewModel.getConfigWialonUsage().observe(this, value -> {
-			//TextView parameterValue = findViewById(R.id.seal_config_value_);
-			//parameterValue.setText(String.valueOf(value) + "");
+			setSealParameter(14, value);
 		});
 		viewModel.getConfigWialonAddr().observe(this, value -> {
-			//TextView parameterValue = findViewById(R.id.seal_config_value_);
-			//parameterValue.setText(String.valueOf(value) + "");
+			setSealParameter(15, value);
 		});
 		viewModel.getConfigGlosavAddr().observe(this, value -> {
-			//TextView parameterValue = findViewById(R.id.seal_config_value_);
-			//parameterValue.setText(String.valueOf(value) + "");
+			setSealParameter(16, value);
 		});
 		viewModel.getConfigEgtsWake().observe(this, value -> {
-			//TextView parameterValue = findViewById(R.id.seal_config_value_);
-			//parameterValue.setText(String.valueOf(value) + "");
+			setSealParameter(17, value);
 		});
 		viewModel.getConfigLoraUsage().observe(this, value -> {
-			//TextView parameterValue = findViewById(R.id.seal_config_value_);
-			//parameterValue.setText(String.valueOf(value) + "");
+			setSealParameter(18, value);
 		});
 		viewModel.getConfigLoraP().observe(this, value -> {
-			//TextView parameterValue = findViewById(R.id.seal_config_value_);
-			//parameterValue.setText(String.valueOf(value) + "");
+			setSealParameter(19, value);
 		});
 		viewModel.getConfigLoraT().observe(this, value -> {
-			//TextView parameterValue = findViewById(R.id.seal_config_value_);
-			//parameterValue.setText(String.valueOf(value) + "");
+			setSealParameter(20, value);
 		});
 		viewModel.getConfigLoraD().observe(this, value -> {
-			//TextView parameterValue = findViewById(R.id.seal_config_value_);
-			//parameterValue.setText(String.valueOf(value) + "");
+			setSealParameter(21, value);
 		});
 		viewModel.getConfigAlertFT().observe(this, value -> {
-			//TextView parameterValue = findViewById(R.id.seal_config_value_);
-			//parameterValue.setText(String.valueOf(value) + "");
+			setSealParameter(22, value);
 		});
 		viewModel.getConfigAlertCL().observe(this, value -> {
-			//TextView parameterValue = findViewById(R.id.seal_config_value_);
-			//parameterValue.setText(String.valueOf(value) + "");
+			setSealParameter(23, value);
 		});
 		viewModel.getConfigAlertAL().observe(this, value -> {
-			//TextView parameterValue = findViewById(R.id.seal_config_value_);
-			//parameterValue.setText(String.valueOf(value) + "");
+			setSealParameter(24, value);
 		});
 		viewModel.getConfigGpsTFIX().observe(this, value -> {
-			//TextView parameterValue = findViewById(R.id.seal_config_value_);
-			//parameterValue.setText(String.valueOf(value) + "");
+			setSealParameter(25, value);
 		});
 		viewModel.getConfigGpsTPOS().observe(this, value -> {
-			//TextView parameterValue = findViewById(R.id.seal_config_value_);
-			//parameterValue.setText(String.valueOf(value) + "");
+			setSealParameter(26, value);
 		});
 		viewModel.getConfigGpsFNEAR().observe(this, value -> {
-			//TextView parameterValue = findViewById(R.id.seal_config_value_);
-			//parameterValue.setText(String.valueOf(value) + "");
+			setSealParameter(27, value);
 		});
 		viewModel.getConfigGpsFSTOP().observe(this, value -> {
-			//TextView parameterValue = findViewById(R.id.seal_config_value_);
-			//parameterValue.setText(String.valueOf(value) + "");
+			setSealParameter(28, value);
 		});
 		viewModel.getConfigGpsFSPD().observe(this, value -> {
-			//TextView parameterValue = findViewById(R.id.seal_config_value_);
-			//parameterValue.setText(String.valueOf(value) + "");
+			setSealParameter(29, value);
 		});
 		viewModel.getConfigGpsFSKIP().observe(this, value -> {
-			//TextView parameterValue = findViewById(R.id.seal_config_value_);
-			//parameterValue.setText(String.valueOf(value) + "");
+			setSealParameter(30, value);
 		});
 		viewModel.getConfigGpsFSAT().observe(this, value -> {
-			//TextView parameterValue = findViewById(R.id.seal_config_value_);
-			//parameterValue.setText(String.valueOf(value) + "");
+			setSealParameter(31, value);
 		});
 		viewModel.getConfigGpsOSI().observe(this, value -> {
-			//TextView parameterValue = findViewById(R.id.seal_config_value_);
-			//parameterValue.setText(String.valueOf(value) + "");
+			setSealParameter(32, value);
 		});
 		//-----------------------------------------------------------------------------------------
 
