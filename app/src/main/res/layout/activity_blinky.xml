@@ -130,25 +130,72 @@
 
 					<android.support.v7.widget.Toolbar
 						android:id="@+id/arm_tool_bar"
-						android:layout_width="0dp"
+						android:layout_width="match_parent"
 						android:layout_height="?actionBarSize"
 						app:layout_constraintLeft_toLeftOf="parent"
 						app:layout_constraintRight_toRightOf="parent"
 						app:layout_constraintTop_toTopOf="parent"
 						app:logo="@drawable/ic_lightbulb_outline"
 						app:title="@string/title_arm_control"
-						app:titleMarginStart="@dimen/toolbar_title_margin" />
+						app:titleMarginStart="@dimen/toolbar_title_margin" >
+
+						<LinearLayout
+							android:layout_width="wrap_content"
+							android:layout_height="match_parent"
+							android:orientation="vertical"
+							android:gravity="left"
+							android:paddingStart="1dp">
+
+						<LinearLayout
+							android:layout_width="wrap_content"
+							android:layout_height="wrap_content"
+							android:orientation="horizontal"
+							android:gravity="center">
+
+							<TextView
+								android:id="@+id/gamma_sw"
+								android:layout_width="wrap_content"
+								android:layout_height="wrap_content"
+								android:text="SW: 0x00"
+								android:textSize="10dp"
+								android:paddingEnd="2dp"/>
+
+							<TextView
+								android:id="@+id/gamma_hw"
+								android:layout_width="wrap_content"
+								android:layout_height="wrap_content"
+								android:text="HW: 0x00"
+								android:textSize="10dp"/>
+
+						</LinearLayout>
+
+							<TextView
+								android:id="@+id/gamma_state"
+								android:layout_width="wrap_content"
+								android:layout_height="wrap_content"
+								android:text="State: 0x00"
+								android:textSize="14dp"
+								android:paddingTop="4dp"/>
+
+							<TextView
+								android:id="@+id/gamma_freq"
+								android:layout_width="wrap_content"
+								android:layout_height="wrap_content"
+								android:text="Freq: 0"
+								android:textSize="14dp"/>
+
+						</LinearLayout>
+
+					</android.support.v7.widget.Toolbar>
 
 
 					<Button
 						android:id="@+id/arm_control_btn"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
-						android:layout_marginEnd="8dp"
-						android:layout_marginStart="8dp"
 						android:text="@string/arm_button_prepare"
-						app:layout_constraintRight_toRightOf="parent"
-						app:layout_constraintTop_toBottomOf="@+id/arm_tool_bar" />
+						tools:layout_editor_absoluteX="165dp"
+						tools:layout_editor_absoluteY="56dp" />
 
 					<ProgressBar
 						android:id="@+id/arm_progress_bar"
@@ -176,6 +223,53 @@
 			</android.support.v7.widget.CardView>
 
 			<android.support.v7.widget.CardView
+				android:id="@+id/info_gamma"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="5dp"
+				android:background="@android:color/white"
+				app:cardElevation="1dp">
+
+				<android.support.v7.widget.LinearLayoutCompat
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					android:layout_margin="5dp"
+					android:layout_gravity="center">
+					<TextView
+						android:id="@+id/gamma_range_open"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:layout_weight="1"
+						android:gravity="center"
+						android:text="RangeOpen" />
+					<TextView
+						android:id="@+id/gamma_range_close"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:layout_weight="1"
+						android:gravity="center"
+						android:text="RangeClose" />
+					<TextView
+						android:id="@+id/gamma_saved_open"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:layout_weight="1"
+						android:gravity="center"
+						android:text="SavedOpen" />
+					<TextView
+						android:id="@+id/gamma_saved_close"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:layout_weight="1"
+						android:gravity="center"
+						android:text="SavedClose" />
+
+				</android.support.v7.widget.LinearLayoutCompat>
+
+			</android.support.v7.widget.CardView>
+
+
+			<android.support.v7.widget.CardView
 				android:id="@+id/info_charge"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
@@ -183,10 +277,10 @@
 				android:background="@android:color/white"
 				app:cardElevation="1dp">
 
-			<android.support.constraint.ConstraintLayout
-				android:id="@+id/charge_container"
-				android:layout_width="match_parent"
-				android:layout_height="match_parent">
+				<android.support.constraint.ConstraintLayout
+					android:id="@+id/charge_container"
+					android:layout_width="match_parent"
+					android:layout_height="match_parent">
 
 				<TextView
 					android:id="@+id/charge_status"

@@ -63,6 +63,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.nio.ByteBuffer;
+
 import no.nordicsemi.android.vega.adapter.ExtendedBluetoothDevice;
 import no.nordicsemi.android.vega.adapter.LoraAdapter;
 import no.nordicsemi.android.vega.utils.Utils;
@@ -272,7 +274,7 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 				armContainer.setBackgroundColor(0xffFFAE19);
 				armState.setText(R.string.arm_alert);
 				armControlBtn.setText(R.string.arm_button_disarm);
-				armStateFlag = 1;
+				armStateFlag = 2;
 			}
 			else {
 				armContainer.setBackgroundColor(Color.WHITE);
@@ -460,7 +462,77 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 		viewModel.getConfigGpsOSI().observe(this, value -> {
 			setSealParameter(32, value);
 		});
+
 		//-----------------------------------------------------------------------------------------
+
+        viewModel.getGammaState().observe(this, value -> {
+            TextView label = findViewById(R.id.gamma_state);
+            switch(value) {
+				case 0x01 : label.setText("State: OPEN");  break;
+				case 0x20 : label.setText("State: CLOSE"); break;
+				case 0x10 : label.setText("State: WAIT");  break;
+				case 0x21 : label.setText("State: ARMED"); break;
+				case 0x22 : label.setText("State: ALARM"); break;
+				case 0x7F : label.setText("State: ERROR"); break;
+				default   : label.setText("State: ---");   break;
+			}
+        });
+        viewModel.getGammaFreq().observe(this, value -> {
+            TextView label = findViewById(R.id.gamma_freq);
+            label.setText("Freq: " + String.valueOf(value));
+        });
+        viewModel.getGammaRangeOpen().observe(this, value -> {
+
+        });
+        viewModel.getGammaRangeClose().observe(this, value -> {
+
+        });
+        viewModel.getGammaSavedOpen().observe(this, value -> {
+
+        });
+        viewModel.getGammaSavedClose().observe(this, value -> {
+
+        });
+        viewModel.getGammaVersionSW().observe(this, value -> {
+            TextView label = findViewById(R.id.gamma_sw);
+            label.setText("State: " + String.valueOf(value));
+        });
+        viewModel.getGammaVersionHW().observe(this, value -> {
+            TextView label = findViewById(R.id.gamma_hw);
+            label.setText("State: " + String.valueOf(value));
+        });
+        viewModel.getGammaMain().observe(this, value -> {
+			byte [] data = ByteBuffer.allocate(4).putInt(value).array();
+            TextView labelState = findViewById(R.id.gamma_state);
+            TextView labelFreq = findViewById(R.id.gamma_freq);
+            TextView labelSW = findViewById(R.id.gamma_sw);
+            TextView labelHW = findViewById(R.id.gamma_hw);
+            labelFreq.setText("Freq: " + String.valueOf(data[1]));
+            labelSW.setText("SW: " + String.valueOf(data[2]));
+            labelHW.setText("HW: " + String.valueOf(data[3]));
+            switch(data[0]) {
+                case 0x01 : labelState.setText("State: OPEN");  break;
+                case 0x20 : labelState.setText("State: CLOSE"); break;
+                case 0x10 : labelState.setText("State: WAIT");  break;
+                case 0x21 : labelState.setText("State: ARMED"); break;
+                case 0x22 : labelState.setText("State: ALARM"); break;
+                case 0x7F : labelState.setText("State: ERROR"); break;
+                default   : labelState.setText("State: ---");   break;
+            }
+        });
+        viewModel.getGammaConfig().observe(this, value -> {
+			byte [] data = ByteBuffer.allocate(4).putInt(value).array();
+			TextView rangeOpen  = findViewById(R.id.gamma_range_open);
+			TextView rangeClose = findViewById(R.id.gamma_range_close);
+			TextView savedOpen  = findViewById(R.id.gamma_saved_open);
+			TextView savedClose = findViewById(R.id.gamma_saved_close);
+			rangeOpen.setText(String.valueOf(data[0]));
+			rangeClose.setText(String.valueOf(data[1]));
+			savedOpen.setText(String.valueOf(data[2]));
+			savedClose.setText(String.valueOf(data[3]));
+        });
+
+        //-----------------------------------------------------------------------------------------
 
 /*
         viewModel.getStatusState().observe(this, value -> {
@@ -601,13 +673,13 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 		@Override
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
-			armContainer.setBackgroundColor(Color.WHITE);
-			armProgressBar.setVisibility(View.VISIBLE);
-			armState.setText(R.string.arm_check);
-			armControlBtn.setEnabled(false);
 			switch(armStateFlag) {
 				// охрана снята
 				case 0: {
+                    armContainer.setBackgroundColor(Color.WHITE);
+                    armProgressBar.setVisibility(View.VISIBLE);
+                    armState.setText(R.string.arm_check);
+                    armControlBtn.setEnabled(false);
 					viewModel.prearm();
 				} break;
 				// ожидание троса
@@ -621,6 +693,10 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 					disarmBuilder.setPositiveButton("Снять", new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
+                            armContainer.setBackgroundColor(Color.WHITE);
+                            armProgressBar.setVisibility(View.VISIBLE);
+                            armState.setText(R.string.arm_check);
+                            armControlBtn.setEnabled(false);
 							viewModel.disarm();
 							dialog.cancel();
 						}

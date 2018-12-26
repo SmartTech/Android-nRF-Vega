@@ -172,6 +172,29 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 
 	//----------------------------------------------------------------------------------------------
 
+	private final MutableLiveData<Integer> mGammaState       = new MutableLiveData<>();
+	private final MutableLiveData<Integer> mGammaFreq        = new MutableLiveData<>();
+	private final MutableLiveData<Integer> mGammaRangeOpen   = new MutableLiveData<>();
+	private final MutableLiveData<Integer> mGammaRangeClose  = new MutableLiveData<>();
+	private final MutableLiveData<Integer> mGammaSavedOpen   = new MutableLiveData<>();
+	private final MutableLiveData<Integer> mGammaSavedClose  = new MutableLiveData<>();
+	private final MutableLiveData<Integer> mGammaVersionSW   = new MutableLiveData<>();
+	private final MutableLiveData<Integer> mGammaVersionHW   = new MutableLiveData<>();
+	private final MutableLiveData<Integer> mGammaMain        = new MutableLiveData<>();
+	private final MutableLiveData<Integer> mGammaConfig      = new MutableLiveData<>();
+
+	public LiveData<Integer> getGammaState()      { return mGammaState;      }
+	public LiveData<Integer> getGammaFreq()       { return mGammaFreq;       }
+	public LiveData<Integer> getGammaRangeOpen()  { return mGammaRangeOpen;  }
+	public LiveData<Integer> getGammaRangeClose() { return mGammaRangeClose; }
+	public LiveData<Integer> getGammaSavedOpen()  { return mGammaSavedOpen;  }
+	public LiveData<Integer> getGammaSavedClose() { return mGammaSavedClose; }
+	public LiveData<Integer> getGammaVersionSW()  { return mGammaVersionSW;  }
+	public LiveData<Integer> getGammaVersionHW()  { return mGammaVersionHW;  }
+	public LiveData<Integer> getGammaMain()       { return mGammaMain;       }
+	public LiveData<Integer> getGammaConfig()     { return mGammaConfig;     }
+
+	//----------------------------------------------------------------------------------------------
 
 	public LiveData<Void> isDeviceReady() {
 		return mOnDeviceReady;
@@ -666,6 +689,56 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
         }
     }
 
+	void onCmdGamma(int subCmd, final byte[] data) {
+		Log.e("onCmdGamma", "subCmd = " + subCmd);
+		Integer value = ByteBuffer.wrap(new byte[]{data[2], data[3], data[4], data[5]}).order(ByteOrder.LITTLE_ENDIAN).getInt();
+		switch(subCmd) {
+			// CHAR_GAMMA_STATE
+			case 0: {
+				mGammaState.postValue(value);
+			} break;
+			// CHAR_GAMMA_FREQ
+			case 1: {
+				mGammaFreq.postValue(value);
+			} break;
+			// CHAR_GAMMA_RANGE_OPEN
+			case 2: {
+				mGammaRangeOpen.postValue(value);
+			} break;
+			// CHAR_GAMMA_RANGE_CLOSE
+			case 3: {
+				mGammaRangeClose.postValue(value);
+			} break;
+			// CHAR_GAMMA_SAVED_OPEN
+			case 4: {
+				mGammaSavedOpen.postValue(value);
+			} break;
+			// CHAR_GAMMA_SAVED_CLOSE
+			case 5: {
+				mGammaSavedClose.postValue(value);
+			} break;
+			// CHAR_GAMMA_VERSION_SW
+			case 6: {
+				mGammaVersionSW.postValue(value);
+			} break;
+			// CHAR_GAMMA_VERSION_HW
+			case 7: {
+				mGammaVersionHW.postValue(value);
+			} break;
+			// CHAR_GAMMA_MAIN
+			case 8: {
+				mGammaMain.postValue(value);
+			} break;
+			// CHAR_GAMMA_CONFIG
+			case 9: {
+				mGammaConfig.postValue(value);
+			} break;
+			default: {
+				Log.e("onCmdConfig", "Unknown subCmd");
+			} break;
+		}
+	}
+
 	@Override
 	public void onDataReceived(final byte[] data) {
 
@@ -744,9 +817,14 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 			case 10 : {
 			    onCmdConfig(subCmd, data);
 			} break;
+			// CHAR_CMD_GAMMA
+			case 11 : {
+				onCmdGamma(subCmd, data);
+			} break;
 			default: {
 				Log.e("onDataReceived", "Unknown cmd");
 			} break;
+
 		}
 
 	}

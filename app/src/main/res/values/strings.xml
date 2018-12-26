@@ -98,4 +98,5 @@
     <string name="gps_fix_time">Время</string>
     <string name="charge_status"><b>Зарядка</b></string>
     <string name="boot_cause_status"><b>Причина запуска</b></string>
+    <string name="gamma_state">Состояние ГАММА</string>
 </resources>
