@@ -112,6 +112,8 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 
 	boolean skipedFirstArm = true;
 
+	boolean enableUpdateBattery = true;
+
 //	int loraCount = 0;
 
 	@Override
@@ -576,12 +578,33 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 */
 		viewModel.getChargeState().observe(this, value -> {
 			TextView charge_state = findViewById(R.id.charge_status_text);
+			TextView battery = findViewById(R.id.battery);
 			switch(value) {
-				case 0 : charge_state.setText("Отключена");  break;
-				case 1 : charge_state.setText("Подключена"); break;
-				case 2 : charge_state.setText("Заряжается"); break;
-				case 3 : charge_state.setText("Завершена");  break;
-				default: charge_state.setText("Неизвестно"); break;
+				case 0 : {
+					enableUpdateBattery = true;
+					battery.setText("---");
+					charge_state.setText("Отключена");
+				}  break;
+				case 1 : {
+					enableUpdateBattery = false;
+					battery.setText("CHG");
+					charge_state.setText("Подключена");
+				} break;
+				case 2 : {
+					enableUpdateBattery = false;
+					battery.setText("CHG");
+					charge_state.setText("Заряжается");
+				} break;
+				case 3 : {
+					enableUpdateBattery = true;
+					battery.setText("FULL");
+					charge_state.setText("Завершена");
+				}  break;
+				default: {
+					enableUpdateBattery = true;
+					battery.setText("---");
+					charge_state.setText("Неизвестно");
+				} break;
 			}
 		});
 
@@ -620,9 +643,10 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 		});
 
 		viewModel.getStatusBat().observe(this, value -> {
-			//TextView info_bat = findViewById(R.id.info_device_bat_value);
-			TextView info_bat = findViewById(R.id.battery);
-			info_bat.setText(String.valueOf(value) + "%");
+			if(enableUpdateBattery) {
+				TextView info_bat = findViewById(R.id.battery);
+				info_bat.setText(String.valueOf(value) + "%");
+			}
 		});
 
 		viewModel.getStatusTemp().observe(this, value -> {
@@ -830,7 +854,7 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 
 	@Override
 	public void OnSealSaveClick() {
-		//viewModel.saveConfig();
+
 		mTimeoutHandler = new Handler();
 		mTimeoutHandler.postDelayed(new Runnable() {
 			public void run() {
@@ -840,12 +864,137 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 				sealParametersDialog = null;
 			}
 		}, 5000);
+
+		for(int i=0; i<10; i++) {
+			switch(i) {
+				case 1 : {
+					EditText view = sealParametersDialog.getView().findViewById(R.id.seal_config_value_id);
+					int value = Integer.parseInt(view.getText().toString());
+					viewModel.saveConfig(i, value);
+				} break;
+				case 2 : {
+					EditText view = findViewById(R.id.seal_config_value_oid);
+					int value = Integer.parseInt(view.getText().toString());
+					viewModel.saveConfig(i, value);
+				} break;
+				case 3 : {
+					EditText view = findViewById(R.id.seal_config_value_sleepIdle);
+					int value = Integer.parseInt(view.getText().toString());
+					viewModel.saveConfig(i, value);
+				} break;
+				case 4 : {
+					EditText view = findViewById(R.id.seal_config_value_sleepArm);
+					int value = Integer.parseInt(view.getText().toString());
+					viewModel.saveConfig(i, value);
+				} break;
+				case 7 : {
+					EditText view = findViewById(R.id.seal_config_value_wait_rope);
+					int value = Integer.parseInt(view.getText().toString());
+					viewModel.saveConfig(i, value);
+				} break;
+				case 8 : {
+					EditText view = findViewById(R.id.seal_config_value_time_gsm);
+					int value = Integer.parseInt(view.getText().toString());
+					viewModel.saveConfig(i, value);
+				} break;
+				case 9 : {
+					EditText view = findViewById(R.id.seal_config_value_time_sms);
+					int value = Integer.parseInt(view.getText().toString());
+					viewModel.saveConfig(i, value);
+				} break;
+				case 10 : {
+					EditText view = findViewById(R.id.seal_config_value_time_egts);
+					int value = Integer.parseInt(view.getText().toString());
+					viewModel.saveConfig(i, value);
+				} break;
+				case 22 : {
+					EditText view = findViewById(R.id.seal_config_value_alert_ft);
+					int value = Integer.parseInt(view.getText().toString());
+					viewModel.saveConfig(i, value);
+				} break;
+				case 23 : {
+					EditText view = findViewById(R.id.seal_config_value_alert_cl);
+					int value = Integer.parseInt(view.getText().toString());
+					viewModel.saveConfig(i, value);
+				} break;
+				case 24 : {
+					EditText view = findViewById(R.id.seal_config_value_alert_al);
+					int value = Integer.parseInt(view.getText().toString());
+					viewModel.saveConfig(i, value);
+				} break;
+				case 25 : {
+					EditText view = findViewById(R.id.seal_config_value_gps_tfix);
+					int value = Integer.parseInt(view.getText().toString());
+					viewModel.saveConfig(i, value);
+				} break;
+				case 26 : {
+					EditText view = findViewById(R.id.seal_config_value_gps_tpos);
+					int value = Integer.parseInt(view.getText().toString());
+					viewModel.saveConfig(i, value);
+				} break;
+				case 27 : {
+					EditText view = findViewById(R.id.seal_config_value_gps_fnear);
+					int value = Integer.parseInt(view.getText().toString());
+					viewModel.saveConfig(i, value);
+				} break;
+				case 28 : {
+					EditText view = findViewById(R.id.seal_config_value_gps_fstop);
+					int value = Integer.parseInt(view.getText().toString());
+					viewModel.saveConfig(i, value);
+				} break;
+				case 29 : {
+					EditText view = findViewById(R.id.seal_config_value_gps_fspd);
+					int value = Integer.parseInt(view.getText().toString());
+					viewModel.saveConfig(i, value);
+				} break;
+				case 30 : {
+					EditText view = findViewById(R.id.seal_config_value_gps_fskip);
+					int value = Integer.parseInt(view.getText().toString());
+					viewModel.saveConfig(i, value);
+				} break;
+				case 31 : {
+					EditText view = findViewById(R.id.seal_config_value_gps_fsat);
+					int value = Integer.parseInt(view.getText().toString());
+					viewModel.saveConfig(i, value);
+				} break;
+				case 32 : {
+					EditText view = findViewById(R.id.seal_config_value_gps_osi);
+					int value = Integer.parseInt(view.getText().toString());
+					viewModel.saveConfig(i, value);
+				} break;
+				default : break;
+			}
+
+		}
+
 	}
 
-	@Override
-	public void OnSealCloseClick() {
-		sealParametersDialog.dismiss();
-	}
+    @Override
+    public void OnSealCloseClick() {
+        sealParametersDialog.dismiss();
+    }
+
+    @Override
+    public void OnSealRebootClick() {
+        sealParametersDialog.dismiss();
+        AlertDialog.Builder rebootBuilder = new AlertDialog.Builder(BlinkyActivity.this);
+        rebootBuilder.setTitle("Перезагрузить пломбу?");
+        rebootBuilder.setPositiveButton("Да", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                viewModel.reboot();
+                dialog.cancel();
+            }
+        });
+        rebootBuilder.setNegativeButton("Нет", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        AlertDialog alert = rebootBuilder.create();
+        alert.show();
+    }
 
 	boolean checkAddrBytes(String str) {
 		if(str.length()==10) {

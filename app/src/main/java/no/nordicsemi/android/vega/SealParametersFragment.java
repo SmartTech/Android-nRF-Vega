@@ -11,10 +11,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Switch;
-import android.widget.TextView;
-
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 
 
 /**
@@ -46,6 +42,7 @@ public class SealParametersFragment extends DialogFragment {
     public interface SealDataListener {
         void OnSealSaveClick();
         void OnSealCloseClick();
+        void OnSealRebootClick();
     }
 
     /**
@@ -104,6 +101,16 @@ public class SealParametersFragment extends DialogFragment {
                                 }
         );
 
+        Button btnReboot = view.findViewById(R.id.btn_seal_config_reboot);
+        btnReboot.setOnClickListener( new View.OnClickListener() {
+
+                                         @Override
+                                         public void onClick(View v) {
+                                             onRebootPressed();
+                                         }
+                                     }
+        );
+
         return view;
     }
 
@@ -124,6 +131,14 @@ public class SealParametersFragment extends DialogFragment {
         mParametersView.setVisibility(View.GONE);
     }
 
+    public void onRebootPressed() {
+        if (mListener != null) {
+            mListener.OnSealRebootClick();
+        }
+        mProgressBar.setVisibility(View.GONE);
+        mParametersView.setVisibility(View.GONE);
+    }
+
     int bitRead(byte b, int bitPos)
     {
         int x = b & (1 << bitPos);
@@ -131,7 +146,6 @@ public class SealParametersFragment extends DialogFragment {
     }
 
     public void onReceiveData(int index, Object data) {
-
 
         switch(index) {
         	// CHAR_CONFIG_PHONE

@@ -291,6 +291,12 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 		mBlinkyManager.write(command);
 		Log.e("ble", "requestInfo " );
 	}
+    // Перезагрузить пломбу
+    public void reboot() {
+        final byte[] command = {13};
+        mBlinkyManager.write(command);
+        Log.e("ble", "reboot " );
+    }
 	// Запрос всей информации
 	public void requestInfo() {
         final byte[] command = {2};
@@ -916,5 +922,13 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 	@Override
 	public void onDeviceNotSupported(final BluetoothDevice device) {
 		// TODO implement
+	}
+
+	public void saveConfig(int id, int value) {
+		ByteBuffer bb = ByteBuffer.allocate(4);
+		bb.putInt(value);
+		byte data[] = bb.array();
+		final byte[] command = {12, (byte) id, data[0], data[1], data[2], data[3]};
+		mBlinkyManager.write(command);
 	}
 }

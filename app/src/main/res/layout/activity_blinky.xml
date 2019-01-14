@@ -72,7 +72,7 @@
 					android:background="@drawable/battery"
 					android:freezesText="true"
 					android:gravity="center"
-					android:text="n/a"
+					android:text="---"
 					android:textColor="#FFFFFF"
 					android:textSize="12sp"/>
 
