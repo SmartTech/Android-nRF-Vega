@@ -582,27 +582,27 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 			switch(value) {
 				case 0 : {
 					enableUpdateBattery = true;
-					battery.setText("---");
+					//battery.setText("---");
 					charge_state.setText("Отключена");
 				}  break;
 				case 1 : {
 					enableUpdateBattery = false;
-					battery.setText("CHG");
+					//battery.setText("CHG");
 					charge_state.setText("Подключена");
 				} break;
 				case 2 : {
 					enableUpdateBattery = false;
-					battery.setText("CHG");
+					//battery.setText("CHG");
 					charge_state.setText("Заряжается");
 				} break;
 				case 3 : {
 					enableUpdateBattery = true;
-					battery.setText("FULL");
+					//battery.setText("FULL");
 					charge_state.setText("Завершена");
 				}  break;
 				default: {
 					enableUpdateBattery = true;
-					battery.setText("---");
+					//battery.setText("---");
 					charge_state.setText("Неизвестно");
 				} break;
 			}
