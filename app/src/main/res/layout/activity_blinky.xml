@@ -182,7 +182,7 @@
 								android:layout_width="wrap_content"
 								android:layout_height="wrap_content"
 								android:text="Freq: 0"
-								android:textSize="14dp"/>
+								android:textSize="14dp" />
 
 						</LinearLayout>
 
@@ -193,9 +193,15 @@
 						android:id="@+id/arm_control_btn"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
+						android:layout_marginStart="8dp"
+						android:layout_marginTop="8dp"
+						android:layout_marginEnd="8dp"
+						android:layout_marginBottom="8dp"
 						android:text="@string/arm_button_prepare"
-						tools:layout_editor_absoluteX="165dp"
-						tools:layout_editor_absoluteY="56dp" />
+						app:layout_constraintBottom_toBottomOf="parent"
+						app:layout_constraintEnd_toEndOf="parent"
+						app:layout_constraintStart_toEndOf="@+id/arm_control_state"
+						app:layout_constraintTop_toBottomOf="@+id/arm_tool_bar" />
 
 					<ProgressBar
 						android:id="@+id/arm_progress_bar"
