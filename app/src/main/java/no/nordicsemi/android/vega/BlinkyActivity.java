@@ -34,6 +34,7 @@ package no.nordicsemi.android.vega;
 //import android.app.Fragment;
 //import android.app.FragmentTransaction;
 
+import android.annotation.SuppressLint;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -114,8 +115,7 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 
 	boolean enableUpdateBattery = true;
 
-//	int loraCount = 0;
-
+	@SuppressLint("MissingPermission")
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -216,6 +216,7 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 		viewModel.isDeviceReady().observe(this, deviceReady -> {
 			progressContainer.setVisibility(View.GONE);
 			content.setVisibility(View.VISIBLE);
+			viewModel.auth("9968");
 			viewModel.requestInfo();
 		});
 		viewModel.getConnectionState().observe(this, connectionState::setText);

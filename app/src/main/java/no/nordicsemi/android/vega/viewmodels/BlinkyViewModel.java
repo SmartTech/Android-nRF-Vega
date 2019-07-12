@@ -285,6 +285,19 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 		mBlinkyManager.disconnect();
 	}
 
+	// Отправить идентификационный номер (номер телефона)
+	public void auth(String phone) {
+		byte[] command = new byte[6];
+		byte[] bytes = phone.getBytes();
+		command[0] = 14;
+        command[1] = 0;
+		for(int i=0; i<4; i++) {
+			if(i<bytes.length) command[i+2] = bytes[i];
+		}
+		mBlinkyManager.write(command);
+		Log.e("ble", "auth = " + phone);
+	}
+
 	// Пробудить пломбу
 	public void wake() {
 		final byte[] command = {5};
@@ -327,22 +340,22 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 
 	// Подготовка к охране
 	public void prearm() {
-        final byte[] command = {0, 0};
+        final byte[] command = {15, 0};
 		mBlinkyManager.write(command);
 	}
 	// Подтвердить постановку на охрану
 	public void armConfirm() {
-        final byte[] command = {0, 1};
+        final byte[] command = {15, 1};
 		mBlinkyManager.write(command);
 	}
 	// Отменить постановку на охрану
 	public void armDiscard() {
-        final byte[] command = {0, 2};
+        final byte[] command = {15, 2};
 		mBlinkyManager.write(command);
 	}
 	// Снять с охраны
 	public void disarm() {
-        final byte[] command = {0, 3};
+        final byte[] command = {15, 3};
 		mBlinkyManager.write(command);
 	}
 	// Получить данные LoRa атчика по индексу
@@ -756,7 +769,7 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 
 		switch(cmd) {
 			// CHAR_CMD_ARM
-			case 0 : {
+			case 15 : {
 				//onCmdArm(subCmd);
 				mArmState.postValue(subCmd);
 			} break;
