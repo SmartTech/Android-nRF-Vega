@@ -65,6 +65,7 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 	// Flag that holds the on off state of the LED. On is true, Off is False
 	private final MutableLiveData<Boolean> mLEDState = new MutableLiveData<>();
 	private final MutableLiveData<Integer> mArmState = new MutableLiveData<>();
+	private final MutableLiveData<Integer> mAuthState = new MutableLiveData<>();
 	private final MutableLiveData<Integer> mGSM = new MutableLiveData<>();
     private final MutableLiveData<byte[]> mSerialNumber = new MutableLiveData<>();
 	private final MutableLiveData<String> mVersionNumber = new MutableLiveData<>();
@@ -223,6 +224,10 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 
 	public LiveData<Integer> getArmState() {
 		return mArmState;
+	}
+
+	public LiveData<Integer> getAuthState() {
+		return mAuthState;
 	}
 
 	public LiveData<Float> getGpsLat() { return mGpsLat; }
@@ -768,6 +773,13 @@ public class BlinkyViewModel extends AndroidViewModel implements BlinkyManagerCa
 		int subCmd = data[1];
 
 		switch(cmd) {
+			// CHAR_CMD_AUTH
+			case 14 : {
+				byte valdata[] = new byte[]{data[2], data[3], data[4], data[5]};
+				int auth = ByteBuffer.wrap(valdata).order(ByteOrder.LITTLE_ENDIAN).getInt();
+				mAuthState.postValue(auth);
+				Log.e("CHAR_CMD_AUTH", String.valueOf(auth));
+			} break;
 			// CHAR_CMD_ARM
 			case 15 : {
 				//onCmdArm(subCmd);

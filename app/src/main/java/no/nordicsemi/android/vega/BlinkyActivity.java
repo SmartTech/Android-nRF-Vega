@@ -93,6 +93,7 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 
 	AlertDialog.Builder addLoraBuilder;
 	EditText addLoraInput;
+	EditText pinInput;
 
 	AlertDialog.Builder armBuilder;
 
@@ -104,6 +105,7 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 
 	ConstraintLayout armContainer;
 	Handler mTimeoutHandler;
+	Handler mTimeoutArmHandler;
 
 	MediaPlayer mp;
 
@@ -114,6 +116,10 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 	boolean skipedFirstArm = true;
 
 	boolean enableUpdateBattery = true;
+
+	int authState = 0;
+
+	int pinCode = 0;
 
 	@SuppressLint("MissingPermission")
 	@Override
@@ -152,6 +158,8 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 			}
 		});
 
+		final LinearLayout progressContainer = findViewById(R.id.progress_container);
+
 		addLoraInput = new EditText(this);
 
 		armBuilder = new AlertDialog.Builder(this);
@@ -161,6 +169,13 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				viewModel.armConfirm();
+				progressContainer.setVisibility(View.VISIBLE);
+				mTimeoutArmHandler = new Handler();
+				mTimeoutArmHandler.postDelayed(new Runnable() {
+					public void run() {
+						progressContainer.setVisibility(View.GONE);
+					}
+				}, 5000);
 				dialog.cancel();
 			}
 		});
@@ -171,6 +186,43 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 				dialog.cancel();
 			}
 		});
+
+		final TextView connectionState = findViewById(R.id.connection_state);
+		final View content = findViewById(R.id.device_container);
+
+		pinInput = new EditText(this);
+
+		AlertDialog.Builder pinBuilder = new AlertDialog.Builder(BlinkyActivity.this);
+		if(pinInput.getParent()!=null)
+			((ViewGroup)pinInput.getParent()).removeView(pinInput);
+		pinBuilder.setView(pinInput);
+		pinBuilder.setTitle("Введите пин-код")
+				.setCancelable(true)
+				.setNegativeButton("Отмена",
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								dialog.cancel();
+								finish();
+							}
+						})
+				.setPositiveButton("OK",
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								dialog.cancel();
+								if(pinInput.length()>0) {
+									pinCode = Integer.parseInt(pinInput.getText().toString());
+									progressContainer.setVisibility(View.GONE);
+									content.setVisibility(View.VISIBLE);
+									viewModel.auth(pinInput.getText().toString());
+                                    viewModel.auth(pinInput.getText().toString());
+								}
+								else {
+									Toast.makeText(getApplicationContext(),"Некорректный пин-код", Toast.LENGTH_SHORT);
+								}
+								viewModel.requestInfo();
+							}
+						});
+		AlertDialog pinDialog = pinBuilder.create();
 
 		addLoraBtn = findViewById(R.id.add_lora_item);
 		addLoraBtn.setOnClickListener(addLoraClicked);
@@ -183,6 +235,8 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 
         wakeBtn = findViewById(R.id.button_wake);
         wakeBtn.setOnClickListener(btnWakeClicked);
+		wakeBtn.setVisibility(View.GONE);
+
 		armProgressBar = findViewById(R.id.arm_progress_bar);
 		armProgressBar.setVisibility(View.GONE);
 
@@ -190,11 +244,6 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 		armState = findViewById(R.id.arm_control_state);
 
 		armContainer = findViewById(R.id.arm_container);
-
-		//final Switch led = findViewById(R.id.led_switch);
-		final LinearLayout progressContainer = findViewById(R.id.progress_container);
-		final TextView connectionState = findViewById(R.id.connection_state);
-		final View content = findViewById(R.id.device_container);
 
 		mSerial  = findViewById(R.id.info_device_serial_value);
 		mVersion = findViewById(R.id.info_device_version_value);
@@ -214,10 +263,7 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 		});
 
 		viewModel.isDeviceReady().observe(this, deviceReady -> {
-			progressContainer.setVisibility(View.GONE);
-			content.setVisibility(View.VISIBLE);
-			viewModel.auth("9968");
-			viewModel.requestInfo();
+			pinDialog.show();
 		});
 		viewModel.getConnectionState().observe(this, connectionState::setText);
 
@@ -225,8 +271,33 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 			if(!connected) finish();
 		});
 
+		viewModel.getAuthState().observe(this, value -> {
+			Log.e("getAuthState", "value = " + value);
+			authState = value;
+			if(value==0) {
+				armControlBtn.setVisibility(View.GONE);
+				addLoraBtn.setVisibility(View.INVISIBLE);
+				sealConfigBtn.setVisibility(View.GONE);
+			} else if(value==1) {
+				armControlBtn.setVisibility(View.VISIBLE);
+				addLoraBtn.setVisibility(View.INVISIBLE);
+				sealConfigBtn.setVisibility(View.GONE);
+			} else {
+				armControlBtn.setVisibility(View.VISIBLE);
+				addLoraBtn.setVisibility(View.VISIBLE);
+				sealConfigBtn.setVisibility(View.VISIBLE);
+			}
+		});
+
 		viewModel.getArmState().observe(this, value -> {
 			Log.e("getArmState", "value = " + value);
+
+			if (mTimeoutArmHandler != null ) {
+				mTimeoutArmHandler.removeCallbacksAndMessages(null);
+				mTimeoutArmHandler = null;
+			}
+			progressContainer.setVisibility(View.GONE);
+
 			// ожидание троса
 			if(value==0) {
 				armContainer.setBackgroundColor(Color.CYAN);
@@ -582,27 +653,27 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 			TextView battery = findViewById(R.id.battery);
 			switch(value) {
 				case 0 : {
-					enableUpdateBattery = true;
+					//enableUpdateBattery = true;
 					//battery.setText("---");
 					charge_state.setText("Отключена");
 				}  break;
 				case 1 : {
-					enableUpdateBattery = false;
+					//enableUpdateBattery = false;
 					//battery.setText("CHG");
 					charge_state.setText("Подключена");
 				} break;
 				case 2 : {
-					enableUpdateBattery = false;
+					//enableUpdateBattery = false;
 					//battery.setText("CHG");
 					charge_state.setText("Заряжается");
 				} break;
 				case 3 : {
-					enableUpdateBattery = true;
+					//enableUpdateBattery = true;
 					//battery.setText("FULL");
 					charge_state.setText("Завершена");
 				}  break;
 				default: {
-					enableUpdateBattery = true;
+					//enableUpdateBattery = true;
 					//battery.setText("---");
 					charge_state.setText("Неизвестно");
 				} break;
@@ -631,10 +702,14 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
             TextView sleep_state = findViewById(R.id.info_device_sleep_value);
             if(value>0) {
                 sleep_state.setText("Активна");
-                wakeBtn.setVisibility(View.GONE);
+				wakeBtn.setVisibility(View.GONE);
             } else {
                 sleep_state.setText("Во сне");
-                wakeBtn.setVisibility(View.VISIBLE);
+				if(authState > 0) {
+					wakeBtn.setVisibility(View.VISIBLE);
+				} else {
+					wakeBtn.setVisibility(View.GONE);
+				}
             }
         });
 
