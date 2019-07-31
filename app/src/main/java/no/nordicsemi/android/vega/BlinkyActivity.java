@@ -117,7 +117,8 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 
 	boolean enableUpdateBattery = true;
 
-	int authState = 0;
+	int authState  = 0;
+	boolean sleepState = false;
 
 	int pinCode = 0;
 
@@ -278,14 +279,18 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 				armControlBtn.setVisibility(View.GONE);
 				addLoraBtn.setVisibility(View.INVISIBLE);
 				sealConfigBtn.setVisibility(View.GONE);
+				wakeBtn.setVisibility(View.GONE);
 			} else if(value==1) {
 				armControlBtn.setVisibility(View.VISIBLE);
 				addLoraBtn.setVisibility(View.INVISIBLE);
 				sealConfigBtn.setVisibility(View.GONE);
+				wakeBtn.setVisibility(sleepState?View.VISIBLE:View.GONE);
 			} else {
 				armControlBtn.setVisibility(View.VISIBLE);
 				addLoraBtn.setVisibility(View.VISIBLE);
 				sealConfigBtn.setVisibility(View.VISIBLE);
+				wakeBtn.setVisibility(View.VISIBLE);
+				wakeBtn.setVisibility(sleepState?View.VISIBLE:View.GONE);
 			}
 		});
 
@@ -700,6 +705,7 @@ public class BlinkyActivity extends AppCompatActivity implements LoraAdapter.Cli
 
         viewModel.getWakeState().observe(this, value -> {
             TextView sleep_state = findViewById(R.id.info_device_sleep_value);
+			sleepState = (value == 0);
             if(value>0) {
                 sleep_state.setText("Активна");
 				wakeBtn.setVisibility(View.GONE);
